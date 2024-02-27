@@ -1,5 +1,5 @@
 {
-  "name": "sanity-plugin-onboarding",
+  "name": "sanity-plugin-walkthrough",
   "version": "1.0.0",
   "description": "",
   "keywords": [
@@ -38,7 +38,8 @@
     "watch": "pkg-utils watch --strict"
   },
   "dependencies": {
-    "@sanity/incompatible-plugin": "^1.0.4"
+    "@sanity/incompatible-plugin": "^1.0.4",
+    "swr": "^2.2.5"
   },
   "devDependencies": {
     "@sanity/icons": "^2.10.2",
