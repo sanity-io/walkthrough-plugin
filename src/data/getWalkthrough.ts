@@ -1,4 +1,4 @@
-import {Walkthrough} from './types'
+import {ResponseError, Walkthrough} from './types'
 
 export const getWalkthrough = async (params: {
   projectId: string
@@ -6,9 +6,15 @@ export const getWalkthrough = async (params: {
 }): Promise<Walkthrough | null | undefined> => {
   try {
     const res = await fetch(
-      `https://api.sanity.io/v2024-02-23/journey/walkthrough/${params.projectId}?pluginVersion=${params.pluginVersion}`,
+      `https://api.sanity.work/v2024-02-23/journey/walkthroughs/${params.projectId}?pluginVersion=${params.pluginVersion}`,
       {method: 'get', credentials: 'include'},
     )
+    if (res.status > 200) {
+      const error = new Error('An error occured when fetching the walkthrough.') as ResponseError
+      error.status = res.status
+      error.info = await res.json()
+      throw error
+    }
     return await res.json()
   } catch (e) {
     console.error(e)

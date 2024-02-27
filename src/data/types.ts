@@ -18,3 +18,8 @@ export type Walkthrough = {
     }
   }
 }
+
+export interface ResponseError extends Error {
+  status?: number
+  info?: Record<string, unknown>
+}

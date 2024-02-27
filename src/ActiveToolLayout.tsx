@@ -6,11 +6,11 @@ import pluginVersion from './pluginVersion'
 
 export function SidebarPanel() {
   const projectId = useProjectId()
-  const {data} = useSWR(`/walkthrough/${projectId}`, () =>
+  const {data, error} = useSWR(`/walkthrough/${projectId}`, () =>
     getWalkthrough({projectId, pluginVersion}),
   )
 
-  if (!data) return null
+  if (!data || error) return null
   return (
     <Card padding={[3, 3, 4]} radius={2} shadow={1} tone="primary">
       <Text size={2} style={{paddingBottom: '3em'}}>
