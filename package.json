@@ -38,6 +38,7 @@
     "watch": "pkg-utils watch --strict"
   },
   "dependencies": {
+    "@portabletext/react": "^3.0.11",
     "@sanity/incompatible-plugin": "^1.0.4",
     "swr": "^2.2.5"
   },

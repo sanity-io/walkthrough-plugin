@@ -1,34 +1,44 @@
-import {Box, Card, Flex, Text} from '@sanity/ui'
-import {ActiveToolLayoutProps, useProjectId} from 'sanity'
+import {Card, Grid} from '@sanity/ui'
+import {ActiveToolLayoutProps, LoadingBlock, useProjectId} from 'sanity'
 import useSWR from 'swr'
+import {SidebarContent} from './components/SidebarContent'
 import {getWalkthrough} from './data/getWalkthrough'
 import pluginVersion from './pluginVersion'
 
-export function SidebarPanel() {
+export function SidebarContainer() {
   const projectId = useProjectId()
-  const {data, error} = useSWR(`/walkthrough/${projectId}`, () =>
+  const {data, error, isLoading} = useSWR(`/walkthrough/${projectId}`, () =>
     getWalkthrough({projectId, pluginVersion}),
   )
 
-  if (!data || error) return null
+  if (!isLoading && (!data || error)) return null
   return (
-    <Card padding={[3, 3, 4]} radius={2} shadow={1} tone="primary">
-      <Text size={2} style={{paddingBottom: '3em'}}>
-        {data.flow.overline}
-      </Text>
-      <Text size={4} style={{paddingBottom: '3em'}}>
-        {data.flow.header}
-      </Text>
-      {data && <pre>{JSON.stringify({steps: data.flow.steps})}</pre>}
+    <Card
+      padding={2}
+      borderLeft
+      style={{
+        width: '370px',
+        overflowY: 'auto',
+        boxSizing: 'border-box',
+      }}
+    >
+      {isLoading && <LoadingBlock />}
+      {data && (
+        <SidebarContent
+          overline={data.flow.overline}
+          header={data.flow.header}
+          steps={data.flow.steps}
+        />
+      )}
     </Card>
   )
 }
 
 export function ActiveToolLayout(props: ActiveToolLayoutProps) {
   return (
-    <Flex height={'fill'}>
-      <Box flex={1}>{props.renderDefault(props)}</Box>
-      <SidebarPanel />
-    </Flex>
+    <Grid columns={2} height={'fill'} style={{gridTemplateColumns: '1fr auto'}}>
+      {props.renderDefault(props)}
+      <SidebarContainer />
+    </Grid>
   )
 }
