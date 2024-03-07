@@ -1,12 +1,22 @@
 import {Flex, Heading, Text} from '@sanity/ui'
 import React, {PropsWithChildren, useCallback, useState} from 'react'
+import {useProjectId} from 'sanity'
+import {postStepComplete} from '../data/postStepComplete'
 import {Step} from '../data/types'
 import {StepItem} from './StepItem'
 
 export const SidebarContent: React.FC<
-  PropsWithChildren<{header: string; overline: string; steps: Step[]; completedSteps: string[]}>
-> = ({overline, header, steps, completedSteps = []}) => {
+  PropsWithChildren<{
+    walkthroughId: string
+    header: string
+    overline: string
+    steps: Step[]
+    completedSteps: string[]
+  }>
+> = ({overline, header, steps, completedSteps = [], walkthroughId}) => {
+  const projectId = useProjectId()
   const [completed, setCompleted] = useState(completedSteps)
+
   const isStepComplete = useCallback(
     (id: string) => {
       return completed.includes(id)
@@ -16,6 +26,7 @@ export const SidebarContent: React.FC<
   const toggleComplete = useCallback(
     (id: string) => {
       const isCompleted = isStepComplete(id)
+
       if (isCompleted) {
         setCompleted((x) => x.filter((s) => s !== id))
       } else {
@@ -24,6 +35,7 @@ export const SidebarContent: React.FC<
           return [...x]
         })
       }
+      postStepComplete({projectId, walkthroughId, completedSteps: completed})
     },
     [isStepComplete],
   )

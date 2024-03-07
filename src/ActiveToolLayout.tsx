@@ -28,6 +28,8 @@ export function SidebarContainer() {
           overline={data.flow.overline}
           header={data.flow.header}
           steps={data.flow.steps}
+          walkthroughId={data._id}
+          completedSteps={data.completedSteps}
         />
       )}
     </Card>

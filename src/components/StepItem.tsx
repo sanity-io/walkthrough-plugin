@@ -1,4 +1,4 @@
-import {CheckmarkIcon, ChevronDownIcon, Icon, IconSymbol} from '@sanity/icons'
+import {CheckmarkIcon, ChevronDownIcon, CloseCircleIcon, Icon, IconSymbol} from '@sanity/icons'
 import {Badge, Box, Button, Card, Flex, Text} from '@sanity/ui'
 import React, {useEffect, useState} from 'react'
 import {Step as StepProps} from '../data/types'
@@ -46,7 +46,8 @@ export const StepItem: React.FC<
 }) => {
   const [open, setOpen] = useState(startOpen)
   useEffect(() => {
-    setOpen(startOpen)
+    // If parent says this one should start open, open it
+    if (startOpen) setOpen(startOpen)
   }, [startOpen])
 
   return (
@@ -93,10 +94,15 @@ export const StepItem: React.FC<
             <Button
               padding={2}
               fontSize={1}
-              text="Mark as complete"
-              icon={CheckmarkIcon}
-              tone="primary"
-              onClick={() => toggleComplete(_id)}
+              text={isComplete ? 'Mark as incomplete' : 'Mark as complete'}
+              icon={isComplete ? CloseCircleIcon : CheckmarkIcon}
+              tone={isComplete ? 'default' : 'primary'}
+              mode={isComplete ? 'ghost' : 'default'}
+              onClick={() => {
+                toggleComplete(_id)
+                // Only close the current step when marking complete
+                if (!isComplete) setOpen(false)
+              }}
             />
           </Flex>
         </>

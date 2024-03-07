@@ -111,7 +111,7 @@ function CodeBlock(props: {children: ReactNode; language: string}) {
 
 export const StepContentSerializer: React.FC<{content: PortableTextBlock}> = ({content}) => {
   return (
-    <Stack space={4} paddingLeft={5} paddingRight={2} paddingBottom={2} paddingTop={5}>
+    <Stack space={4} paddingLeft={5} paddingRight={2} paddingBottom={4} paddingTop={5}>
       <PortableText
         value={content}
         components={{
