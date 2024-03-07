@@ -85,7 +85,12 @@ function InlineIcon(props: {children: ReactNode; symbol: string}) {
 
 function CodeBlock(props: {children: ReactNode; language: string}) {
   const {children, language} = props
+  const projectId = useProjectId()
   const [isCopied, setCopied] = useState(false)
+  function sanitizeCodeSample(code: string | ReactNode) {
+    if (typeof code !== 'string') return code
+    return code.replaceAll('"YOUR_PROJECT_ID"', `"${projectId}"`)
+  }
   const onCopy = () => {
     setCopied(true)
     setTimeout(() => setCopied(false), 5000)
@@ -103,13 +108,14 @@ function CodeBlock(props: {children: ReactNode; language: string}) {
         <Button
           style={{position: 'absolute', top: '0', right: '0'}}
           icon={isCopied ? CheckmarkIcon : ClipboardIcon}
+          text={isCopied ? 'Copied' : undefined}
           tone={isCopied ? 'positive' : 'default'}
           size={0}
           mode="bleed"
         />
         <Code size={1}>
           <span>{language == 'sh' && `$ `}</span>
-          {children}
+          {sanitizeCodeSample(children)}
         </Code>
       </Card>
     </CopyToClipboard>
