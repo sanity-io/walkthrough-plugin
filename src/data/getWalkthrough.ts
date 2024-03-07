@@ -9,7 +9,7 @@ export const getWalkthrough = async (params: {
     // because the prefixed URL doesn't allow the personalization forge
     // access to the userId - only the projectUserId
     const res = await fetch(
-      `https://api.sanity.work/v2024-02-23/journey/walkthroughs/${params.projectId}?pluginVersion=${params.pluginVersion}`,
+      `https://${params.projectId}.api.sanity.work/v2024-02-23/journey/walkthroughs/${params.projectId}?pluginVersion=${params.pluginVersion}`,
       {method: 'get', credentials: 'include'},
     )
     if (res.status > 200) {

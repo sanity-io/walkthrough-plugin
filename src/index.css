@@ -1,0 +1,79 @@
+.absolute {
+  position: absolute
+}
+
+.relative {
+  position: relative
+}
+
+.box-border {
+  box-sizing: border-box
+}
+
+.block {
+  display: block
+}
+
+.flex {
+  display: flex
+}
+
+.inline-flex {
+  display: inline-flex
+}
+
+.list-disc {
+  list-style-type: disc
+}
+
+.border {
+  border-width: 1px
+}
+
+.border-solid {
+  border-style: solid
+}
+
+.border-transparent {
+  border-color: transparent
+}
+
+.border-\[var\(--card-border-color\)\] {
+  border-color: var(--card-border-color)
+}
+
+.border-opacity-0 {
+  --tw-border-opacity: 0
+}
+
+.overline {
+  text-decoration-line: overline
+}
+
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms
+}
+
+.transition-opacity {
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms
+}
+
+.hover\:cursor-pointer:hover {
+  cursor: pointer
+}
+
+.hover\:border-\[var\(--card-border-color\)\]:hover {
+  border-color: var(--card-border-color)
+}
+
+.hover\:opacity-75:hover {
+  opacity: 0.75
+}
+
+.hover\:opacity-80:hover {
+  opacity: 0.8
+}

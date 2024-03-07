@@ -1,8 +1,8 @@
-import {ChevronDownIcon, Icon, IconSymbol} from '@sanity/icons'
+import {CheckmarkIcon, ChevronDownIcon, Icon, IconSymbol} from '@sanity/icons'
 import {Badge, Box, Button, Card, Flex, Text} from '@sanity/ui'
 import React, {useState} from 'react'
 import {Step as StepProps} from '../data/types'
-import {PortableText} from '@portabletext/react'
+import {StepContentSerializer} from './StepContentSerializer'
 
 const IconCircle: React.FC<{isComplete: boolean; symbol: string}> = ({isComplete, symbol}) => {
   return (
@@ -14,10 +14,14 @@ const IconCircle: React.FC<{isComplete: boolean; symbol: string}> = ({isComplete
         height: '25px',
         width: '25px',
         borderRadius: '50%',
-        backgroundColor: 'var(--gray-50, #F6F6F8)',
+        fontSize: '21px',
+        backgroundColor: isComplete
+          ? 'var(--card-focus-ring-color,#556bfc)'
+          : 'var(--card-code-bg-color, #F6F6F8)',
+        color: isComplete ? 'white' : undefined,
       }}
     >
-      <Icon symbol={symbol as IconSymbol} />
+      {isComplete ? <CheckmarkIcon /> : <Icon symbol={symbol as IconSymbol} />}
     </Box>
   )
 }
@@ -34,13 +38,17 @@ export const StepItem: React.FC<StepProps & {startOpen: boolean; isComplete: boo
 
   return (
     <Card
-      border={open}
       radius={4}
       paddingY={open ? 2 : 1}
       paddingX={2}
-      style={{boxSizing: 'border-box'}}
+      className={`box-border border border-solid border-transparent transition-all hover:border-[var(--card-border-color)] ${open && 'border-[var(--card-border-color)]'}`}
     >
-      <Flex direction={'row'} align={'center'}>
+      <Flex
+        direction={'row'}
+        align={'center'}
+        onClick={() => setOpen((x) => !x)}
+        className="hover:cursor-pointer"
+      >
         <Flex>
           <IconCircle symbol={icon} isComplete={isComplete} />
         </Flex>
@@ -49,23 +57,22 @@ export const StepItem: React.FC<StepProps & {startOpen: boolean; isComplete: boo
             {title}
           </Text>
         </Flex>
-        <Badge tone={badge === 'no-code' ? 'primary' : undefined}>{badge}</Badge>
+        <Badge tone={badge === 'No code' ? 'primary' : undefined}>{badge}</Badge>
         <Flex paddingLeft={1}>
           <Button
             size={0}
             mode="bleed"
             padding={2}
             icon={ChevronDownIcon}
-            onClick={() => setOpen((x) => !x)}
+            style={{
+              transitionProperty: 'opacity',
+              transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+              transitionDuration: '150ms',
+            }}
           />
         </Flex>
       </Flex>
-      {open && (
-        <PortableText
-          value={content}
-          components={{block: {normal: ({children}) => <Text size={1}>{children}</Text>}}}
-        />
-      )}
+      {open && <StepContentSerializer content={content} />}
     </Card>
   )
 }

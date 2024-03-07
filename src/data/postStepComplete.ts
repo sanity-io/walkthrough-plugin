@@ -5,7 +5,7 @@ export const postStepComplete = async (params: {
 }): Promise<string[] | null | undefined> => {
   try {
     const res = await fetch(
-      `https://api.sanity.io/v2024-02-23/journey/walkthrough/${params.projectId}/${params.walthroughId}`,
+      `https://${params.projectId}.api.sanity.work/v2024-02-23/journey/walkthrough/${params.projectId}/${params.walthroughId}`,
       {
         method: 'post',
         credentials: 'include',

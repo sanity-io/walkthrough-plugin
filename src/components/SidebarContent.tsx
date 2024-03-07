@@ -22,8 +22,8 @@ export const SidebarContent: React.FC<
       </Flex>
 
       <Flex direction={'column'} gap={3}>
-        {steps.map((s) => (
-          <StepItem key={s._id} {...s} startOpen={false} isComplete={false} />
+        {steps.map((s, index) => (
+          <StepItem key={s._id} {...s} startOpen={false} isComplete={index == 0 || false} />
         ))}
       </Flex>
     </>
