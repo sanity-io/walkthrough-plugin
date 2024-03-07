@@ -3,7 +3,9 @@ import {Icon, IconSymbol, LinkIcon, ClipboardIcon, CheckmarkIcon} from '@sanity/
 import {Box, Button, Card, Heading, Stack, Text, Code} from '@sanity/ui'
 import React, {ReactNode, useState} from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
-import {PortableTextBlock} from 'sanity'
+import {LoadingBlock, PortableTextBlock, useProjectId} from 'sanity'
+import useSWR from 'swr'
+import {getExampleQuery} from '../data/getExampleQuery'
 
 function NormalBlock(props: {children: ReactNode}) {
   const {children} = props
@@ -61,7 +63,12 @@ function Link(props: {children: ReactNode; url: string; withIcon: boolean}) {
 }
 
 function GROQExample() {
-  return <CodeBlock language="groq">Copyable GROQ Example</CodeBlock>
+  const projectId = useProjectId()
+  const {data, isLoading} = useSWR(`/projects/${projectId}`, () => getExampleQuery({projectId}))
+
+  return (
+    <CodeBlock language="groq">{isLoading ? <LoadingBlock /> : Object.values(data)[0]}</CodeBlock>
+  )
 }
 
 function InlineIcon(props: {children: ReactNode; symbol: string}) {
