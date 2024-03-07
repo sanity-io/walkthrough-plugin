@@ -67,7 +67,10 @@ function GROQExample() {
   const {data, isLoading} = useSWR(`/projects/${projectId}`, () => getExampleQuery({projectId}))
 
   return (
-    <CodeBlock language="groq">{isLoading ? <LoadingBlock /> : Object.values(data)[0]}</CodeBlock>
+    <CodeBlock language="groq">
+      {isLoading && <LoadingBlock />}
+      {data && Object.values(data)?.[0]}
+    </CodeBlock>
   )
 }
 
