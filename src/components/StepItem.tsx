@@ -71,7 +71,7 @@ export const StepItem: React.FC<
             {title}
           </Text>
         </Flex>
-        <Badge tone={badge === 'No code' ? 'primary' : undefined}>{badge}</Badge>
+        {badge && <Badge tone={badge === 'No code' ? 'primary' : undefined}>{badge}</Badge>}
         <Flex paddingLeft={1}>
           <Button
             size={0}
