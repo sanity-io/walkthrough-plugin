@@ -1,4 +1,4 @@
-import {Flex, Heading, Text} from '@sanity/ui'
+import {Box, Flex, Heading, Text} from '@sanity/ui'
 import React, {PropsWithChildren, useCallback, useState} from 'react'
 import {useProjectId} from 'sanity'
 import {postStepComplete} from '../data/postStepComplete'
@@ -41,6 +41,7 @@ export const SidebarContent: React.FC<
   )
   return (
     <>
+      {/* TITLE HEADER */}
       <Flex direction={'column'} gap={4} padding={3}>
         <Flex>
           <Text size={1} weight="semibold">
@@ -53,8 +54,8 @@ export const SidebarContent: React.FC<
           </Heading>
         </Flex>
       </Flex>
-
-      <Flex direction={'column'} gap={3}>
+      {/* STEPS LIST */}
+      <Flex direction={'column'} gap={3} paddingBottom={5}>
         {steps.map((s, index) => {
           const isComplete = index == 0 || isStepComplete(s._id)
           const isPreviousComplete = index == 1 || isStepComplete(steps[Math.max(index - 1, 0)]._id)
@@ -70,6 +71,23 @@ export const SidebarContent: React.FC<
           )
         })}
       </Flex>
+      {/* PERSISTENT REMOVAL CALLOUT */}
+      <Box
+        paddingX={3}
+        paddingY={4}
+        style={{
+          position: 'fixed',
+          bottom: '0',
+          backgroundColor: 'var(--card-bg-color)',
+          boxSizing: 'border-box',
+          marginTop: '1rem',
+        }}
+      >
+        <Text size={1} muted>
+          This panel will automatically be removed in the final step of installing the Studio
+          locally
+        </Text>
+      </Box>
     </>
   )
 }

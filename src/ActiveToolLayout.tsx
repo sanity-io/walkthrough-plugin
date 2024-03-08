@@ -15,11 +15,13 @@ export function SidebarContainer() {
   return (
     <Card
       padding={2}
+      paddingBottom={0}
       borderLeft
       style={{
         width: '370px',
         overflowY: 'auto',
         boxSizing: 'border-box',
+        position: 'relative',
       }}
     >
       {isLoading && <LoadingBlock />}
