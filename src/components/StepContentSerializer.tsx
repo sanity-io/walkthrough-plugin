@@ -107,6 +107,7 @@ function CodeBlock(props: {children: ReactNode; language: string}) {
         radius={2}
         style={{position: 'relative', boxSizing: 'border-box', cursor: 'pointer'}}
         className="hover:opacity-80 transition-opacity"
+        overflow={'auto'}
       >
         <Button
           style={{position: 'absolute', top: '0', right: '0'}}
