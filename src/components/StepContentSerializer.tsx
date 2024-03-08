@@ -103,24 +103,24 @@ function CodeBlock(props: {children: ReactNode; language: string}) {
     <CopyToClipboard text={children as string} onCopy={onCopy}>
       <Card
         border
-        padding={3}
         radius={2}
         style={{position: 'relative', boxSizing: 'border-box', cursor: 'pointer'}}
         className="hover:opacity-80 transition-opacity"
-        overflow={'auto'}
       >
-        <Button
-          style={{position: 'absolute', top: '0', right: '0'}}
-          icon={isCopied ? CheckmarkIcon : ClipboardIcon}
-          text={isCopied ? 'Copied' : undefined}
-          tone={isCopied ? 'positive' : 'default'}
-          size={0}
-          mode="bleed"
-        />
-        <Code size={1}>
-          <span>{language == 'sh' && `$ `}</span>
-          {sanitizeCodeSample(children)}
-        </Code>
+        <Box padding={3} overflow={'auto'}>
+          <Button
+            style={{position: 'absolute', top: '0', right: '0', zIndex: '10'}}
+            icon={isCopied ? CheckmarkIcon : ClipboardIcon}
+            text={isCopied ? 'Copied' : undefined}
+            tone={isCopied ? 'positive' : 'default'}
+            size={0}
+            mode="ghost"
+          />
+          <Code size={1}>
+            <span>{language == 'sh' && `$ `}</span>
+            {sanitizeCodeSample(children)}
+          </Code>
+        </Box>
       </Card>
     </CopyToClipboard>
   )
