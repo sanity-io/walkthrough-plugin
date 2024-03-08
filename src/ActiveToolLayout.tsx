@@ -19,7 +19,7 @@ export function SidebarContainer() {
       borderLeft
       style={{
         width: '370px',
-        overflowY: 'auto',
+        overflowY: 'scroll',
         boxSizing: 'border-box',
         position: 'relative',
       }}
