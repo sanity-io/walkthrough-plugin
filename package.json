@@ -6,7 +6,7 @@
     "sanity",
     "sanity-plugin"
   ],
-  "license": "MIT",
+  "license": "UNLICENSED",
   "author": "Drew Lyton <drew.lyton@sanity.io>",
   "main": "./dist/index.js",
   "module": "./dist/index.esm.js",
