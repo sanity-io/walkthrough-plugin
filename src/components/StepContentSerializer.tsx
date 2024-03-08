@@ -86,8 +86,8 @@ function InlineIcon(props: {children: ReactNode; symbol: string}) {
   )
 }
 
-function CodeBlock(props: {children: ReactNode; language: string; filename: string}) {
-  const {children, language, filename} = props
+function CodeBlock(props: {children: ReactNode; language: string; filename?: string}) {
+  const {children, language, filename = ''} = props
   const projectId = useProjectId()
   const [isCopied, setCopied] = useState(false)
   function sanitizeCodeSample(code: string | ReactNode) {
