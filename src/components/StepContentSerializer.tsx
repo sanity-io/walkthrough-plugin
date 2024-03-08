@@ -86,8 +86,8 @@ function InlineIcon(props: {children: ReactNode; symbol: string}) {
   )
 }
 
-function CodeBlock(props: {children: ReactNode; language: string}) {
-  const {children, language} = props
+function CodeBlock(props: {children: ReactNode; language: string; filename: string}) {
+  const {children, language, filename} = props
   const projectId = useProjectId()
   const [isCopied, setCopied] = useState(false)
   function sanitizeCodeSample(code: string | ReactNode) {
@@ -116,6 +116,11 @@ function CodeBlock(props: {children: ReactNode; language: string}) {
             size={0}
             mode="ghost"
           />
+          {filename && (
+            <Box paddingBottom={5}>
+              <Code size={0}>{filename}</Code>
+            </Box>
+          )}
           <Code size={1}>
             <span>{language == 'sh' && `$ `}</span>
             {sanitizeCodeSample(children)}
@@ -138,7 +143,11 @@ export const StepContentSerializer: React.FC<{content: PortableTextBlock}> = ({c
             groq: () => <GROQExample />,
           },
           types: {
-            code: ({value}) => <CodeBlock language={value?.language}>{value.code}</CodeBlock>,
+            code: ({value}) => (
+              <CodeBlock language={value?.language} filename={value?.filename}>
+                {value.code}
+              </CodeBlock>
+            ),
           },
           list: {
             bullet: ({children}) => <List>{children}</List>,

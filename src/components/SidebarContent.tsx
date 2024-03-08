@@ -55,7 +55,7 @@ export const SidebarContent: React.FC<
         </Flex>
       </Flex>
       {/* STEPS LIST */}
-      <Flex direction={'column'} gap={3} paddingBottom={5}>
+      <Flex direction={'column'} gap={3} marginBottom={8}>
         {steps.map((s, index) => {
           const isComplete = index == 0 || isStepComplete(s._id)
           const isPreviousComplete = index == 1 || isStepComplete(steps[Math.max(index - 1, 0)]._id)
