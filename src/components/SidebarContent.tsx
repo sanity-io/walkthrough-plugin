@@ -92,6 +92,7 @@ export const SidebarContent: React.FC<
           backgroundColor: 'var(--card-bg-color)',
           boxSizing: 'border-box',
           marginTop: '1rem',
+          zIndex: '20',
         }}
       >
         <Text size={1} muted>
