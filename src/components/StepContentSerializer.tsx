@@ -1,7 +1,7 @@
 import {PortableText} from '@portabletext/react'
-import {Icon, IconSymbol, LinkIcon, ClipboardIcon, CheckmarkIcon} from '@sanity/icons'
-import {Box, Button, Card, Heading, Stack, Text, Code} from '@sanity/ui'
-import React, {ReactNode, useState} from 'react'
+import {CheckmarkIcon, ClipboardIcon, Icon, IconSymbol, LinkIcon} from '@sanity/icons'
+import {Box, Button, Card, Code, Heading, Stack, Text} from '@sanity/ui'
+import React, {ReactNode, useCallback, useState} from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import {LoadingBlock, PortableTextBlock, useProjectId} from 'sanity'
 import useSWR from 'swr'
@@ -100,10 +100,17 @@ function CodeBlock(props: {children: ReactNode; language: string; filename?: str
   const {children, language, filename = ''} = props
   const projectId = useProjectId()
   const [isCopied, setCopied] = useState(false)
-  function sanitizeCodeSample(code: string | ReactNode) {
-    if (typeof code !== 'string') return code
-    return code.replaceAll('{{PROJECT_ID}}', `"${projectId}"`)
-  }
+  const {data, isLoading} = useSWR(`/projects/${projectId}`, () => getExampleQuery({projectId}))
+  const sanitizedCodeSample = useCallback(
+    (code: string | ReactNode) => {
+      if (typeof code !== 'string') return code
+      const sanitizedExample = code.replaceAll('{{PROJECT_ID}}', `"${projectId}"`)
+      if (!isLoading && data)
+        sanitizedExample.replaceAll('{{GROQ_QUERY}}', Object.values(data)?.[0])
+      return sanitizedExample
+    },
+    [isLoading, data, projectId],
+  )
   const onCopy = () => {
     setCopied(true)
     setTimeout(() => setCopied(false), 5000)
@@ -144,7 +151,7 @@ function CodeBlock(props: {children: ReactNode; language: string; filename?: str
           )}
           <Code size={1}>
             <span>{language == 'sh' && `$ `}</span>
-            {sanitizeCodeSample(children)}
+            {sanitizedCodeSample(children)}
           </Code>
         </Box>
       </Card>
