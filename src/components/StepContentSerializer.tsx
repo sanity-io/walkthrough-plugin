@@ -104,16 +104,27 @@ function CodeBlock(props: {children: ReactNode; language: string; filename?: str
       <Card
         border
         radius={2}
-        style={{position: 'relative', boxSizing: 'border-box', cursor: 'pointer'}}
+        style={{
+          position: 'relative',
+          boxSizing: 'border-box',
+          cursor: 'pointer',
+          backgroundColor: 'var(--card-code-bg-color, #f6f6f8)',
+        }}
         className="hover:opacity-80 transition-opacity"
       >
-        <Box padding={3} overflow={'auto'}>
+        <Box padding={3} marginRight={5} overflow={'auto'}>
           <Button
-            style={{position: 'absolute', top: '0', right: '0', zIndex: '10'}}
+            style={{
+              position: 'absolute',
+              top: '0',
+              right: '0',
+              zIndex: '10',
+              backgroundColor: 'var(--card-code-bg-color, #f6f6f8)',
+            }}
             icon={isCopied ? CheckmarkIcon : ClipboardIcon}
             tone={isCopied ? 'positive' : 'default'}
             size={0}
-            mode="ghost"
+            mode="bleed"
           />
           {filename && (
             <Box paddingBottom={5}>
