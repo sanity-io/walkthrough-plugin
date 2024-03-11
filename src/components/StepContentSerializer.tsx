@@ -92,7 +92,7 @@ function CodeBlock(props: {children: ReactNode; language: string; filename?: str
   const [isCopied, setCopied] = useState(false)
   function sanitizeCodeSample(code: string | ReactNode) {
     if (typeof code !== 'string') return code
-    return code.replaceAll('"YOUR_PROJECT_ID"', `"${projectId}"`)
+    return code.replaceAll('{{PROJECT_ID}}', `"${projectId}"`)
   }
   const onCopy = () => {
     setCopied(true)
