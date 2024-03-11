@@ -71,12 +71,14 @@ function Link(props: {children: ReactNode; url: string; withIcon: boolean}) {
   )
 }
 
-function GROQExample() {
+function GROQExample(params: Record<string, string>) {
   const projectId = useProjectId()
   const client = useClient({apiVersion: 'v2024-02-23'})
+
+  const queryParams = new URLSearchParams(params).toString()
   const {data, isLoading} = useSWR(`/projects/${projectId}/groq`, () =>
     client.request({
-      uri: `/journey/projects/${projectId}/groq?simpleProjection=true&includeProjection=true`,
+      uri: `/journey/projects/${projectId}/groq?${queryParams}`,
       method: 'get',
       withCredentials: true,
     }),
@@ -108,7 +110,7 @@ function CodeBlock(props: {children: ReactNode; language: string; filename?: str
   const [isCopied, setCopied] = useState(false)
   const client = useClient({apiVersion: 'v2024-02-23'})
   const {data, isLoading} = useSWR(
-    `/projects/${projectId}/groq`,
+    `/projects/${projectId}/groqDefault`,
     () =>
       client.request({
         uri: `/journey/projects/${projectId}/groq?simpleProjection=true&includeProjection=true`,
@@ -192,6 +194,7 @@ export const StepContentSerializer: React.FC<{content: PortableTextBlock}> = ({c
                 {value.code}
               </CodeBlock>
             ),
+            groqExample: ({value}) => <GROQExample {...value} />,
           },
           list: {
             bullet: ({children}) => <UnorderedList>{children}</UnorderedList>,
