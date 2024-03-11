@@ -14,11 +14,12 @@ export function SidebarContainer() {
   if (!isLoading && (!data || error)) return null
   return (
     <Card
+      className="sm:hidden"
       padding={2}
       paddingBottom={0}
       borderLeft
       style={{
-        width: '370px',
+        width: '400px',
         overflowY: 'scroll',
         boxSizing: 'border-box',
         position: 'relative',

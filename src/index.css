@@ -93,3 +93,9 @@
 .hover\:opacity-80:hover {
   opacity: 0.8
 }
+
+@media (min-width: 640px) {
+  .sm\:hidden {
+    display: none
+  }
+}
