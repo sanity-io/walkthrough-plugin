@@ -3,9 +3,8 @@ import {CheckmarkIcon, ClipboardIcon, Icon, IconSymbol, LinkIcon} from '@sanity/
 import {Box, Button, Card, Code, Heading, Stack, Text} from '@sanity/ui'
 import React, {ReactNode, useCallback, useState} from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
-import {LoadingBlock, PortableTextBlock, useProjectId} from 'sanity'
+import {LoadingBlock, PortableTextBlock, useClient, useProjectId} from 'sanity'
 import useSWR from 'swr'
-import {getExampleQuery} from '../data/getExampleQuery'
 
 function NormalBlock(props: {children: ReactNode}) {
   const {children} = props
@@ -74,7 +73,14 @@ function Link(props: {children: ReactNode; url: string; withIcon: boolean}) {
 
 function GROQExample() {
   const projectId = useProjectId()
-  const {data, isLoading} = useSWR(`/projects/${projectId}`, () => getExampleQuery({projectId}))
+  const client = useClient({apiVersion: 'v2024-02-23'})
+  const {data, isLoading} = useSWR(`/projects/${projectId}/groq`, () =>
+    client.request({
+      uri: `/journey/projects/${projectId}/groq?simpleProjection=true&includeProjection=true`,
+      method: 'get',
+      withCredentials: true,
+    }),
+  )
 
   return (
     <CodeBlock language="groq">
@@ -100,7 +106,17 @@ function CodeBlock(props: {children: ReactNode; language: string; filename?: str
   const {children, language, filename = ''} = props
   const projectId = useProjectId()
   const [isCopied, setCopied] = useState(false)
-  const {data, isLoading} = useSWR(`/projects/${projectId}`, () => getExampleQuery({projectId}))
+  const client = useClient({apiVersion: 'v2024-02-23'})
+  const {data, isLoading} = useSWR(
+    `/projects/${projectId}/groq`,
+    () =>
+      client.request({
+        uri: `/journey/projects/${projectId}/groq?simpleProjection=true&includeProjection=true`,
+        method: 'get',
+        withCredentials: true,
+      }) as Promise<Record<string, string> | undefined>,
+  )
+
   const sanitizedCodeSample = useCallback(
     (code: string | ReactNode) => {
       if (typeof code !== 'string') return code

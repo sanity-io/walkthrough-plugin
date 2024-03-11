@@ -1,15 +1,19 @@
 import {Card, Grid} from '@sanity/ui'
-import {ActiveToolLayoutProps, LoadingBlock, useProjectId} from 'sanity'
+import {ActiveToolLayoutProps, LoadingBlock, useClient, useProjectId} from 'sanity'
 import useSWR from 'swr'
 import {SidebarContent} from './components/SidebarContent'
-import {getWalkthrough} from './data/getWalkthrough'
 import pluginVersion from './pluginVersion'
 
 export function SidebarContainer() {
   const projectId = useProjectId()
-  const {data, error, isLoading} = useSWR(`/walkthrough/${projectId}`, () =>
-    getWalkthrough({projectId, pluginVersion}),
-  )
+  const client = useClient({apiVersion: 'v2024-02-23'})
+  const {data, error, isLoading} = useSWR(`/walkthrough/${projectId}`, () => {
+    return client.request({
+      uri: `/journey/walkthroughs/${projectId}?pluginVersion=${pluginVersion}`,
+      method: 'get',
+      withCredentials: true,
+    })
+  })
 
   if (!isLoading && (!data || error)) return null
   return (

@@ -1,7 +1,6 @@
 import {Box, Flex, Heading, Text} from '@sanity/ui'
 import React, {PropsWithChildren, useCallback, useState} from 'react'
-import {useProjectId} from 'sanity'
-import {postStepComplete} from '../data/postStepComplete'
+import {useClient, useProjectId} from 'sanity'
 import {Step} from '../data/types'
 import {StepItem} from './StepItem'
 
@@ -15,6 +14,8 @@ export const SidebarContent: React.FC<
   }>
 > = ({overline, header, steps, completedSteps = [], walkthroughId}) => {
   const projectId = useProjectId()
+  const client = useClient({apiVersion: 'v2024-02-23'})
+
   const [completed, setCompleted] = useState(completedSteps)
 
   const isStepComplete = useCallback(
@@ -35,7 +36,16 @@ export const SidebarContent: React.FC<
           return [...x]
         })
       }
-      postStepComplete({projectId, walkthroughId, completedSteps: completed})
+
+      client.request({
+        uri: `/journey/walkthroughs/${projectId}/${walkthroughId}`,
+        method: 'post',
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: {completedSteps},
+      })
     },
     [isStepComplete],
   )
