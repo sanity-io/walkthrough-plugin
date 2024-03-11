@@ -13,6 +13,7 @@ export type Flow = {
   name: string
   header: string
   overline: string
+  footer: string
   steps: Step[]
 }
 

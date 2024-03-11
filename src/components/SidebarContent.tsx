@@ -9,10 +9,11 @@ export const SidebarContent: React.FC<
     walkthroughId: string
     header: string
     overline: string
+    footer: string
     steps: Step[]
     completedSteps: string[]
   }>
-> = ({overline, header, steps, completedSteps = [], walkthroughId}) => {
+> = ({overline, header, footer, steps, completedSteps = [], walkthroughId}) => {
   const projectId = useProjectId()
   const client = useClient({apiVersion: 'v2024-02-23'})
 
@@ -108,8 +109,7 @@ export const SidebarContent: React.FC<
         }}
       >
         <Text size={1} muted>
-          This panel will automatically be removed in the final step of installing the Studio
-          locally
+          {footer}
         </Text>
       </Box>
     </Box>

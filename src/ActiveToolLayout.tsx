@@ -2,6 +2,7 @@ import {Card, Grid} from '@sanity/ui'
 import {ActiveToolLayoutProps, LoadingBlock, useClient, useProjectId} from 'sanity'
 import useSWR from 'swr'
 import {SidebarContent} from './components/SidebarContent'
+import {Walkthrough} from './data/types'
 import pluginVersion from './pluginVersion'
 
 export function SidebarContainer() {
@@ -12,7 +13,7 @@ export function SidebarContainer() {
       uri: `/journey/walkthroughs/${projectId}?pluginVersion=${pluginVersion}`,
       method: 'get',
       withCredentials: true,
-    })
+    }) as Promise<Walkthrough | undefined>
   })
 
   if (!isLoading && (!data || error)) return null
@@ -33,6 +34,7 @@ export function SidebarContainer() {
         <SidebarContent
           overline={data.flow.overline}
           header={data.flow.header}
+          footer={data.flow.footer}
           steps={data.flow.steps}
           walkthroughId={data._id}
           completedSteps={data.completedSteps}
