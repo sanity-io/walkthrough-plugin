@@ -109,6 +109,7 @@ function CodeBlock(props: {children: ReactNode; language: string; filename?: str
           boxSizing: 'border-box',
           cursor: 'pointer',
           backgroundColor: 'var(--card-code-bg-color, #f6f6f8)',
+          margin: '0 -0.25rem 0 -1.75rem',
         }}
         className="hover:opacity-80 transition-opacity"
       >
