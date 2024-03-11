@@ -41,8 +41,12 @@ export function SidebarContainer() {
 
 export function ActiveToolLayout(props: ActiveToolLayoutProps) {
   return (
-    <Grid columns={2} height={'fill'} style={{gridTemplateColumns: '1fr auto'}}>
-      {props.renderDefault(props)}
+    <Grid
+      columns={2}
+      height={'fill'}
+      style={{gridTemplateColumns: '1fr auto', gridAutoFlow: 'column'}}
+    >
+      <div>{props.renderDefault(props)}</div>
       <SidebarContainer />
     </Grid>
   )
