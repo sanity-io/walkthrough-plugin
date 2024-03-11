@@ -66,7 +66,7 @@ export const StepItem: React.FC<
         <Flex>
           <IconCircle symbol={icon} isComplete={isComplete} />
         </Flex>
-        <Flex flex={1} paddingLeft={2}>
+        <Flex flex={1} paddingLeft={2} className="select-none">
           <Text size={1} weight="medium">
             {title}
           </Text>
