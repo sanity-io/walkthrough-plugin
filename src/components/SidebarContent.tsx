@@ -40,7 +40,7 @@ export const SidebarContent: React.FC<
     [isStepComplete],
   )
   return (
-    <>
+    <Box style={{overflowY: 'scroll', height: '100%'}}>
       {/* TITLE HEADER */}
       <Flex direction={'column'} gap={4} padding={3}>
         <Flex>
@@ -87,12 +87,14 @@ export const SidebarContent: React.FC<
         paddingX={3}
         paddingY={4}
         style={{
-          position: 'fixed',
+          position: 'absolute',
           bottom: '0',
+          left: '0',
+          right: '0',
           backgroundColor: 'var(--card-bg-color)',
           boxSizing: 'border-box',
-          marginTop: '1rem',
           zIndex: '20',
+          borderTop: '0.5px solid var(--card-border-color)',
         }}
       >
         <Text size={1} muted>
@@ -100,6 +102,6 @@ export const SidebarContent: React.FC<
           locally
         </Text>
       </Box>
-    </>
+    </Box>
   )
 }

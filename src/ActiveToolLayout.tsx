@@ -20,8 +20,7 @@ export function SidebarContainer() {
       borderLeft
       style={{
         width: '400px',
-        overflowY: 'scroll',
-        boxSizing: 'border-box',
+        overflowY: 'hidden',
         position: 'relative',
       }}
     >

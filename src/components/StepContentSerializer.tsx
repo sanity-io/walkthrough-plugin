@@ -27,11 +27,21 @@ function ListItem(props: {children: ReactNode}) {
   )
 }
 
-function List(props: {children: ReactNode}) {
+function UnorderedList(props: {children: ReactNode}) {
   const {children} = props
 
   return (
     <Stack space={4} paddingLeft={4} as={'ul'} style={{listStyle: 'disc'}}>
+      {children}
+    </Stack>
+  )
+}
+
+function OrderedList(props: {children: ReactNode}) {
+  const {children} = props
+
+  return (
+    <Stack space={4} paddingLeft={4} as={'ol'} style={{listStyle: 'decimal'}}>
       {children}
     </Stack>
   )
@@ -51,7 +61,7 @@ function HeadingBlock(props: {children: ReactNode}) {
 function Link(props: {children: ReactNode; url: string; withIcon: boolean}) {
   const {children, url, withIcon} = props
   return (
-    <a href={url}>
+    <a href={url} target="_blank" rel="noreferrer">
       {children}
       {withIcon && (
         <span style={{paddingLeft: '0.75em'}}>
@@ -161,7 +171,8 @@ export const StepContentSerializer: React.FC<{content: PortableTextBlock}> = ({c
             ),
           },
           list: {
-            bullet: ({children}) => <List>{children}</List>,
+            bullet: ({children}) => <UnorderedList>{children}</UnorderedList>,
+            number: ({children}) => <OrderedList>{children}</OrderedList>,
           },
           listItem: {
             bullet: ({children}) => <ListItem>{children}</ListItem>,
