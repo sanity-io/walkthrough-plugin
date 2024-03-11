@@ -1,4 +1,11 @@
-import {CheckmarkIcon, ChevronDownIcon, CloseCircleIcon, Icon, IconSymbol} from '@sanity/icons'
+import {
+  CheckmarkIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  CloseCircleIcon,
+  Icon,
+  IconSymbol,
+} from '@sanity/icons'
 import {Badge, Box, Button, Card, Flex, Text} from '@sanity/ui'
 import React, {useEffect, useState} from 'react'
 import {Step as StepProps} from '../data/types'
@@ -77,7 +84,7 @@ export const StepItem: React.FC<
             size={0}
             mode="bleed"
             padding={2}
-            icon={ChevronDownIcon}
+            icon={open ? ChevronUpIcon : ChevronDownIcon}
             style={{
               transitionProperty: 'opacity',
               transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
