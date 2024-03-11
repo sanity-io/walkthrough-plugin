@@ -122,9 +122,11 @@ function CodeBlock(props: {children: ReactNode; language: string; filename?: str
   const sanitizedCodeSample = useCallback(
     (code: string | ReactNode) => {
       if (typeof code !== 'string') return code
-      const sanitizedExample = code.replaceAll('{{PROJECT_ID}}', `"${projectId}"`)
-      if (!isLoading && data)
-        sanitizedExample.replaceAll('{{GROQ_QUERY}}', Object.values(data)?.[0])
+      let sanitizedExample = code.replaceAll('{{PROJECT_ID}}', `"${projectId}"`)
+      if (!isLoading && data) {
+        sanitizedExample = sanitizedExample.replaceAll('{{GROQ_QUERY}}', Object.values(data)?.[0])
+      }
+
       return sanitizedExample
     },
     [isLoading, data, projectId],
