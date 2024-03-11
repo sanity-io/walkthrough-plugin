@@ -111,7 +111,6 @@ function CodeBlock(props: {children: ReactNode; language: string; filename?: str
           <Button
             style={{position: 'absolute', top: '0', right: '0', zIndex: '10'}}
             icon={isCopied ? CheckmarkIcon : ClipboardIcon}
-            text={isCopied ? 'Copied' : undefined}
             tone={isCopied ? 'positive' : 'default'}
             size={0}
             mode="ghost"
