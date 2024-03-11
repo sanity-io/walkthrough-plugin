@@ -104,7 +104,7 @@ export const StepItem: React.FC<
               text={isComplete ? 'Mark as incomplete' : 'Mark as complete'}
               icon={isComplete ? CloseCircleIcon : CheckmarkIcon}
               tone={isComplete ? 'default' : 'primary'}
-              mode={isComplete ? 'ghost' : 'default'}
+              mode={'ghost'}
               onClick={() => {
                 toggleComplete(_id)
                 // Only close the current step when marking complete
