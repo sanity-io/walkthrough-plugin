@@ -1,17 +1,9 @@
-.fixed {
-  position: fixed
-}
-
 .absolute {
   position: absolute
 }
 
 .relative {
   position: relative
-}
-
-.sticky {
-  position: sticky
 }
 
 .z-10 {
@@ -44,10 +36,6 @@
           user-select: none
 }
 
-.list-disc {
-  list-style-type: disc
-}
-
 .border {
   border-width: 1px
 }
@@ -56,20 +44,12 @@
   border-style: solid
 }
 
-.border-transparent {
-  border-color: transparent
-}
-
 .border-\[var\(--card-border-color\)\] {
   border-color: var(--card-border-color)
 }
 
-.border-opacity-0 {
-  --tw-border-opacity: 0
-}
-
-.bg-\[var\(--card-bg-color\)\] {
-  background-color: var(--card-bg-color)
+.border-transparent {
+  border-color: transparent
 }
 
 .overline {
@@ -98,10 +78,6 @@
 
 .hover\:border-\[var\(--card-border-color\)\]:hover {
   border-color: var(--card-border-color)
-}
-
-.hover\:opacity-75:hover {
-  opacity: 0.75
 }
 
 .hover\:opacity-80:hover {

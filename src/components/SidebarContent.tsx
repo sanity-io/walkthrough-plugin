@@ -3,6 +3,8 @@ import React, {PropsWithChildren, useCallback, useState} from 'react'
 import {useClient, useProjectId} from 'sanity'
 import {Step} from '../data/types'
 import {StepItem} from './StepItem'
+import {useTelemetry} from '@sanity/telemetry/react'
+import {QuickstartCompleted, QuickstartStepCompleted} from '../data/telemetry'
 
 export const SidebarContent: React.FC<
   PropsWithChildren<{
@@ -16,6 +18,7 @@ export const SidebarContent: React.FC<
 > = ({overline, header, footer, steps, completedSteps = [], walkthroughId}) => {
   const projectId = useProjectId()
   const client = useClient({apiVersion: 'v2024-02-23'})
+  const telemetry = useTelemetry()
 
   const [completed, setCompleted] = useState(completedSteps)
 
@@ -32,6 +35,17 @@ export const SidebarContent: React.FC<
       if (isCompleted) {
         setCompleted((x) => x.filter((s) => s !== id))
       } else {
+        telemetry.log(QuickstartStepCompleted, {
+          projectId,
+          stepId: id,
+          stepName: steps.find((s) => s._id == id)?.title,
+        })
+
+        // +2 because first step is always complete
+        // and we're going to add another to the list
+        if (completedSteps.length + 2 === steps.length)
+          telemetry.log(QuickstartCompleted, {projectId})
+
         setCompleted((x) => {
           x.push(id)
           return [...x]

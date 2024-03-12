@@ -5,6 +5,9 @@ import React, {ReactNode, useCallback, useState} from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import {LoadingBlock, PortableTextBlock, useClient, useProjectId} from 'sanity'
 import useSWR from 'swr'
+import {useStep} from './StepItem'
+import {useTelemetry} from '@sanity/telemetry/react'
+import {QuickstartCodeCopied, QuickstartLinkClicked} from '../data/telemetry'
 
 function NormalBlock(props: {children: ReactNode}) {
   const {children} = props
@@ -59,8 +62,21 @@ function HeadingBlock(props: {children: ReactNode}) {
 
 function Link(props: {children: ReactNode; url: string; withIcon: boolean}) {
   const {children, url, withIcon} = props
+  const stepContext = useStep()
+  const telemetry = useTelemetry()
   return (
-    <a href={url} target="_blank" rel="noreferrer">
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      onClick={() =>
+        telemetry.log(QuickstartLinkClicked, {
+          ...stepContext,
+          targetText: props?.children,
+          targetUrl: props?.url,
+        })
+      }
+    >
       {children}
       {withIcon && (
         <span style={{paddingLeft: '0.75em'}}>
@@ -94,12 +110,21 @@ function GROQExample(params: Record<string, string>) {
 function CTAButton(props: {text: string; href: string; icon: IconSymbol}) {
   const projectId = useProjectId()
   const sanitizedHref = props?.href.replace('{{PROJECT_ID}}', projectId)
+  const stepContext = useStep()
+  const telemetry = useTelemetry()
   return (
     <div>
       <Button
         as={'a'}
         href={sanitizedHref}
         target="_blank"
+        onClick={() =>
+          telemetry.log(QuickstartLinkClicked, {
+            ...stepContext,
+            targetText: props?.text,
+            targetUrl: props?.href,
+          })
+        }
         text={props?.text}
         icon={props?.icon && <Icon symbol={props.icon} />}
         mode={'default'}
@@ -135,6 +160,8 @@ function CodeBlock(props: {children: ReactNode; language: string; filename?: str
         withCredentials: true,
       }) as Promise<Record<string, string> | undefined>,
   )
+  const stepContext = useStep()
+  const telemetry = useTelemetry()
 
   const sanitizedCodeSample = useCallback(
     (code: string | ReactNode) => {
@@ -151,10 +178,14 @@ function CodeBlock(props: {children: ReactNode; language: string; filename?: str
   const onCopy = () => {
     setCopied(true)
     setTimeout(() => setCopied(false), 5000)
+    telemetry.log(QuickstartCodeCopied, {
+      ...stepContext,
+      copiedContent: sanitizedCodeSample(children),
+    })
   }
 
   return (
-    <CopyToClipboard text={children as string} onCopy={onCopy}>
+    <CopyToClipboard text={sanitizedCodeSample(children) as string} onCopy={onCopy}>
       <Card
         border
         radius={2}
