@@ -1,13 +1,13 @@
 import {PortableText} from '@portabletext/react'
 import {CheckmarkIcon, ClipboardIcon, Icon, IconSymbol, LinkIcon} from '@sanity/icons'
+import {useTelemetry} from '@sanity/telemetry/react'
 import {Box, Button, Card, Code, Heading, Stack, Text} from '@sanity/ui'
-import React, {ReactNode, useCallback, useState} from 'react'
+import React, {ReactNode, useMemo, useState} from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import {LoadingBlock, PortableTextBlock, useClient, useProjectId} from 'sanity'
 import useSWR from 'swr'
-import {useStep} from './StepItem'
-import {useTelemetry} from '@sanity/telemetry/react'
 import {QuickstartCodeCopied, QuickstartLinkClicked} from '../data/telemetry'
+import {useStep} from './StepItem'
 
 function NormalBlock(props: {children: ReactNode}) {
   const {children} = props
@@ -98,13 +98,19 @@ function GROQExample(params: Record<string, string>) {
       withCredentials: true,
     }),
   )
+  const code = useMemo(() => {
+    if (data) {
+      let groqQuery = Object.values(data)?.[0] as string
+      if (params?.comment) {
+        groqQuery = `// ${params.comment}\n${groqQuery}`
+      }
 
-  return (
-    <CodeBlock language="groq" filename={params?.comment && `// ${params?.comment}`}>
-      {isLoading && <LoadingBlock />}
-      {data && Object.values(data)?.[0]}
-    </CodeBlock>
-  )
+      return groqQuery
+    }
+    return ''
+  }, [data, params?.comment])
+
+  return <CodeBlock code={code} language="groq" loading={isLoading} />
 }
 
 function CTAButton(props: {text: string; href: string; icon: IconSymbol}) {
@@ -154,8 +160,8 @@ function InlineIcon(props: {children: ReactNode; symbol: string}) {
   )
 }
 
-function CodeBlock(props: {children: ReactNode; language: string; filename?: string}) {
-  const {children, language, filename = ''} = props
+function CodeBlock(props: {loading?: boolean; code: string; language: string; filename?: string}) {
+  const {code = '', language, filename = '', loading = false} = props
   const projectId = useProjectId()
   const [isCopied, setCopied] = useState(false)
   const client = useClient({apiVersion: 'v2024-02-23'})
@@ -171,29 +177,26 @@ function CodeBlock(props: {children: ReactNode; language: string; filename?: str
   const stepContext = useStep()
   const telemetry = useTelemetry()
 
-  const sanitizedCodeSample = useCallback(
-    (code: string | ReactNode) => {
-      if (typeof code !== 'string') return code
-      let sanitizedExample = code.replaceAll('{{PROJECT_ID}}', `"${projectId}"`)
-      if (!isLoading && data) {
-        sanitizedExample = sanitizedExample.replaceAll('{{GROQ_QUERY}}', Object.values(data)?.[0])
-      }
+  const sanitizedCodeSnippet = useMemo(() => {
+    let sanitizedExample = code.replaceAll('{{PROJECT_ID}}', `"${projectId}"`)
+    if (!(isLoading || loading) && data) {
+      sanitizedExample = sanitizedExample.replaceAll('{{GROQ_QUERY}}', Object.values(data)?.[0])
+    }
 
-      return sanitizedExample
-    },
-    [isLoading, data, projectId],
-  )
-  const onCopy = () => {
+    return sanitizedExample
+  }, [isLoading, loading, data, projectId, code])
+
+  const onCopy = (text: string) => {
     setCopied(true)
     setTimeout(() => setCopied(false), 5000)
     telemetry.log(QuickstartCodeCopied, {
       ...stepContext,
-      copiedContent: sanitizedCodeSample(children),
+      copiedContent: text,
     })
   }
 
   return (
-    <CopyToClipboard text={sanitizedCodeSample(children) as string} onCopy={onCopy}>
+    <CopyToClipboard text={sanitizedCodeSnippet} onCopy={onCopy}>
       <Card
         border
         radius={2}
@@ -226,8 +229,14 @@ function CodeBlock(props: {children: ReactNode; language: string; filename?: str
             </Box>
           )}
           <Code size={1}>
-            <span>{language == 'sh' && `$ `}</span>
-            {sanitizedCodeSample(children)}
+            {loading ? (
+              <LoadingBlock />
+            ) : (
+              <>
+                <span>{language == 'sh' && `$ `}</span>
+                {sanitizedCodeSnippet}
+              </>
+            )}
           </Code>
         </Box>
       </Card>
@@ -247,9 +256,7 @@ export const StepContentSerializer: React.FC<{content: PortableTextBlock}> = ({c
           },
           types: {
             code: ({value}) => (
-              <CodeBlock language={value?.language} filename={value?.filename}>
-                {value.code}
-              </CodeBlock>
+              <CodeBlock code={value?.code} language={value?.language} filename={value?.filename} />
             ),
             groqExample: ({value}) => <GROQExample {...value} />,
             ctaButton: ({value}) => <CTAButton {...value} />,

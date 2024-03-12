@@ -31,7 +31,7 @@ export const SidebarContent: React.FC<
   const toggleComplete = useCallback(
     (id: string) => {
       const isCompleted = isStepComplete(id)
-      let newCompletedSteps = completedSteps
+      let newCompletedSteps = [...completedSteps]
 
       if (isCompleted) {
         newCompletedSteps = completedSteps.filter((s) => s !== id)
@@ -60,7 +60,7 @@ export const SidebarContent: React.FC<
         body: {completedSteps: newCompletedSteps},
       })
     },
-    [isStepComplete],
+    [isStepComplete, completedSteps],
   )
   return (
     <Box style={{overflowY: 'scroll', height: '100%'}}>
