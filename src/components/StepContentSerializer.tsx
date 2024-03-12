@@ -74,9 +74,8 @@ function Link(props: {children: ReactNode; url: string; withIcon: boolean}) {
 function GROQExample(params: Record<string, string>) {
   const projectId = useProjectId()
   const client = useClient({apiVersion: 'v2024-02-23'})
-
   const queryParams = new URLSearchParams(params).toString()
-  const {data, isLoading} = useSWR(`/projects/${projectId}/groq`, () =>
+  const {data, isLoading} = useSWR(`/projects/${projectId}/groq?${queryParams}`, () =>
     client.request({
       uri: `/journey/projects/${projectId}/groq?${queryParams}`,
       method: 'get',
@@ -89,6 +88,22 @@ function GROQExample(params: Record<string, string>) {
       {isLoading && <LoadingBlock />}
       {data && Object.values(data)?.[0]}
     </CodeBlock>
+  )
+}
+
+function CTAButton(props: {text: string; href: string; icon: IconSymbol}) {
+  const projectId = useProjectId()
+  const sanitizedHref = props?.href.replace('{{PROJECT_ID}}', projectId)
+  return (
+    <Button
+      as={'a'}
+      href={sanitizedHref}
+      target="_blank"
+      text={props?.text}
+      icon={props?.icon && <Icon symbol={props.icon} />}
+      mode={'default'}
+      tone={'primary'}
+    />
   )
 }
 
@@ -188,7 +203,6 @@ export const StepContentSerializer: React.FC<{content: PortableTextBlock}> = ({c
           block: {
             normal: ({children}) => <NormalBlock>{children}</NormalBlock>,
             h2: ({children}) => <HeadingBlock>{children}</HeadingBlock>,
-            groq: () => <GROQExample />,
           },
           types: {
             code: ({value}) => (
@@ -197,6 +211,7 @@ export const StepContentSerializer: React.FC<{content: PortableTextBlock}> = ({c
               </CodeBlock>
             ),
             groqExample: ({value}) => <GROQExample {...value} />,
+            ctaButton: ({value}) => <CTAButton {...value} />,
           },
           list: {
             bullet: ({children}) => <UnorderedList>{children}</UnorderedList>,
