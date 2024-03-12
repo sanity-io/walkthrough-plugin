@@ -1,10 +1,10 @@
+import {useTelemetry} from '@sanity/telemetry/react'
 import {Box, Flex, Heading, Text} from '@sanity/ui'
 import React, {PropsWithChildren, useCallback, useState} from 'react'
 import {useClient, useProjectId} from 'sanity'
+import {QuickstartCompleted, QuickstartStepCompleted} from '../data/telemetry'
 import {Step} from '../data/types'
 import {StepItem} from './StepItem'
-import {useTelemetry} from '@sanity/telemetry/react'
-import {QuickstartCompleted, QuickstartStepCompleted} from '../data/telemetry'
 
 export const SidebarContent: React.FC<
   PropsWithChildren<{
@@ -31,10 +31,10 @@ export const SidebarContent: React.FC<
   const toggleComplete = useCallback(
     (id: string) => {
       const isCompleted = isStepComplete(id)
-      let newCompletedSteps = [...completedSteps]
+      let newCompletedSteps = [...completed]
 
       if (isCompleted) {
-        newCompletedSteps = completedSteps.filter((s) => s !== id)
+        newCompletedSteps = newCompletedSteps.filter((s) => s !== id)
       } else {
         newCompletedSteps.push(id)
         telemetry.log(QuickstartStepCompleted, {
@@ -43,9 +43,8 @@ export const SidebarContent: React.FC<
           stepName: steps.find((s) => s._id == id)?.title,
         })
 
-        // +2 because first step is always complete
-        // and we're going to add another to the list
-        if (completedSteps.length + 2 === steps.length)
+        // +1 because first step is always complete
+        if (newCompletedSteps.length++ === steps.length)
           telemetry.log(QuickstartCompleted, {projectId})
       }
       setCompleted(newCompletedSteps)
@@ -60,7 +59,7 @@ export const SidebarContent: React.FC<
         body: {completedSteps: newCompletedSteps},
       })
     },
-    [isStepComplete, completedSteps],
+    [isStepComplete, completed, steps],
   )
   return (
     <Box style={{overflowY: 'scroll', height: '100%'}}>
