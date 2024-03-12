@@ -138,9 +138,17 @@ function InlineIcon(props: {children: ReactNode; symbol: string}) {
   const {children, symbol} = props
   return (
     <>
-      <span style={{display: 'inline-flex', alignItems: 'center'}}>
-        <Icon symbol={(symbol as IconSymbol) || 'rocket'} />
-      </span>
+      <Icon
+        symbol={(symbol as IconSymbol) || 'rocket'}
+        style={{
+          display: 'inline',
+          fontSize: 'calc(21 / 16 * 1rem) !important',
+          margin: '-0.375rem 0 !important',
+          paddingLeft: '0.25em',
+          paddingRight: '0.25em',
+        }}
+      />
+
       {children}
     </>
   )
@@ -252,6 +260,7 @@ export const StepContentSerializer: React.FC<{content: PortableTextBlock}> = ({c
           },
           listItem: {
             bullet: ({children}) => <ListItem>{children}</ListItem>,
+            number: ({children}) => <ListItem>{children}</ListItem>,
           },
           marks: {
             customLink: ({value, children}) => (
