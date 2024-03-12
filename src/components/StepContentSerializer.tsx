@@ -84,7 +84,7 @@ function GROQExample(params: Record<string, string>) {
   )
 
   return (
-    <CodeBlock language="groq">
+    <CodeBlock language="groq" filename={params?.comment && `// ${params?.comment}`}>
       {isLoading && <LoadingBlock />}
       {data && Object.values(data)?.[0]}
     </CodeBlock>
@@ -95,15 +95,17 @@ function CTAButton(props: {text: string; href: string; icon: IconSymbol}) {
   const projectId = useProjectId()
   const sanitizedHref = props?.href.replace('{{PROJECT_ID}}', projectId)
   return (
-    <Button
-      as={'a'}
-      href={sanitizedHref}
-      target="_blank"
-      text={props?.text}
-      icon={props?.icon && <Icon symbol={props.icon} />}
-      mode={'default'}
-      tone={'primary'}
-    />
+    <div>
+      <Button
+        as={'a'}
+        href={sanitizedHref}
+        target="_blank"
+        text={props?.text}
+        icon={props?.icon && <Icon symbol={props.icon} />}
+        mode={'default'}
+        tone={'primary'}
+      />
+    </div>
   )
 }
 
