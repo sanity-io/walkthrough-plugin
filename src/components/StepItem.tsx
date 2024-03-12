@@ -89,7 +89,8 @@ export const StepItem: React.FC<
         radius={4}
         paddingY={open ? 2 : 1}
         paddingX={2}
-        className={`box-border z-10 border border-solid border-transparent transition-all ${!disableExpansion && 'hover:border-[var(--card-border-color)]'} ${open && 'border-[var(--card-border-color)]'}`}
+        style={{borderColor: open ? 'var(--card-border-color)' : undefined}}
+        className={`box-border z-10 border border-solid border-transparent transition-all ${!disableExpansion && 'hover:border-[var(--card-border-color)]'}`}
       >
         <Flex
           direction={'row'}
