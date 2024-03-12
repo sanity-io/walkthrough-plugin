@@ -31,10 +31,12 @@ export const SidebarContent: React.FC<
   const toggleComplete = useCallback(
     (id: string) => {
       const isCompleted = isStepComplete(id)
+      let newCompletedSteps = completedSteps
 
       if (isCompleted) {
-        setCompleted((x) => x.filter((s) => s !== id))
+        newCompletedSteps = completedSteps.filter((s) => s !== id)
       } else {
+        newCompletedSteps.push(id)
         telemetry.log(QuickstartStepCompleted, {
           projectId,
           stepId: id,
@@ -45,12 +47,8 @@ export const SidebarContent: React.FC<
         // and we're going to add another to the list
         if (completedSteps.length + 2 === steps.length)
           telemetry.log(QuickstartCompleted, {projectId})
-
-        setCompleted((x) => {
-          x.push(id)
-          return [...x]
-        })
       }
+      setCompleted(newCompletedSteps)
 
       client.request({
         uri: `/journey/walkthroughs/${projectId}/${walkthroughId}`,
@@ -59,7 +57,7 @@ export const SidebarContent: React.FC<
         headers: {
           'Content-Type': 'application/json',
         },
-        body: {completedSteps},
+        body: {completedSteps: newCompletedSteps},
       })
     },
     [isStepComplete],

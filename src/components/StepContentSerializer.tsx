@@ -137,12 +137,12 @@ function CTAButton(props: {text: string; href: string; icon: IconSymbol}) {
 function InlineIcon(props: {children: ReactNode; symbol: string}) {
   const {children, symbol} = props
   return (
-    <span>
-      <span style={{paddingRight: '0.75em'}}>
+    <>
+      <span style={{display: 'inline-flex', alignItems: 'center'}}>
         <Icon symbol={(symbol as IconSymbol) || 'rocket'} />
       </span>
       {children}
-    </span>
+    </>
   )
 }
 
