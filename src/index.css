@@ -34,6 +34,10 @@
   display: none
 }
 
+.\!hidden {
+  display: none !important
+}
+
 .select-none {
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -46,10 +50,6 @@
 
 .border-solid {
   border-style: solid
-}
-
-.border-\[var\(--card-border-color\)\] {
-  border-color: var(--card-border-color)
 }
 
 .border-transparent {
@@ -89,7 +89,21 @@
 }
 
 @media (min-width: 640px) {
-  .sm\:hidden {
-    display: none
+  .sm\:visible {
+    visibility: visible
+  }
+
+  .sm\:block {
+    display: block
+  }
+
+  .sm\:\!hidden {
+    display: none !important
+  }
+}
+
+@media (min-width: 768px) {
+  .md\:\!block {
+    display: block !important
   }
 }

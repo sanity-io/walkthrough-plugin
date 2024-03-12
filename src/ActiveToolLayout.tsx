@@ -19,7 +19,7 @@ export function SidebarContainer() {
   if (!isLoading && (!data || error)) return null
   return (
     <Card
-      className="sm:hidden"
+      className="!hidden md:!block"
       padding={2}
       paddingBottom={0}
       borderLeft
