@@ -113,7 +113,7 @@ function GROQExample(params: Record<string, string>) {
   return <CodeBlock code={code} language="groq" loading={isLoading} />
 }
 
-function CTAButton(props: {text: string; href: string; icon: IconSymbol; newTab}) {
+function CTAButton(props: {text: string; href: string; icon: IconSymbol; newTab: boolean}) {
   const projectId = useProjectId()
   const sanitizedHref = props?.href.replace('{{PROJECT_ID}}', projectId)
   const stepContext = useStep()
