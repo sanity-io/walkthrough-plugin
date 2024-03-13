@@ -60,14 +60,14 @@ function HeadingBlock(props: {children: ReactNode}) {
   )
 }
 
-function Link(props: {children: ReactNode; url: string; withIcon: boolean; notNewTab: boolean}) {
-  const {children, url, withIcon, notNewTab} = props
+function Link(props: {children: ReactNode; url: string; withIcon: boolean; newTab: boolean}) {
+  const {children, url, withIcon, newTab} = props
   const stepContext = useStep()
   const telemetry = useTelemetry()
   return (
     <a
       href={url}
-      target={notNewTab ? undefined : '_blank'}
+      target={newTab ? '_blank' : undefined}
       rel="noreferrer"
       onClick={() =>
         telemetry.log(QuickstartLinkClicked, {
@@ -271,7 +271,7 @@ export const StepContentSerializer: React.FC<{content: PortableTextBlock}> = ({c
           },
           marks: {
             customLink: ({value, children}) => (
-              <Link url={value?.url} withIcon={value?.withIcon}>
+              <Link url={value?.url} withIcon={value?.withIcon} newTab={value?.newTab}>
                 {children}
               </Link>
             ),
