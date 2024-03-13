@@ -113,7 +113,7 @@ function GROQExample(params: Record<string, string>) {
   return <CodeBlock code={code} language="groq" loading={isLoading} />
 }
 
-function CTAButton(props: {text: string; href: string; icon: IconSymbol}) {
+function CTAButton(props: {text: string; href: string; icon: IconSymbol; newTab}) {
   const projectId = useProjectId()
   const sanitizedHref = props?.href.replace('{{PROJECT_ID}}', projectId)
   const stepContext = useStep()
@@ -123,7 +123,7 @@ function CTAButton(props: {text: string; href: string; icon: IconSymbol}) {
       <Button
         as={'a'}
         href={sanitizedHref}
-        target="_blank"
+        target={props?.newTab ? '_blank' : undefined}
         onClick={() =>
           telemetry.log(QuickstartLinkClicked, {
             ...stepContext,
