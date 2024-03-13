@@ -60,14 +60,14 @@ function HeadingBlock(props: {children: ReactNode}) {
   )
 }
 
-function Link(props: {children: ReactNode; url: string; withIcon: boolean}) {
-  const {children, url, withIcon} = props
+function Link(props: {children: ReactNode; url: string; withIcon: boolean; notNewTab: boolean}) {
+  const {children, url, withIcon, notNewTab} = props
   const stepContext = useStep()
   const telemetry = useTelemetry()
   return (
     <a
       href={url}
-      target="_blank"
+      target={notNewTab ? undefined : '_blank'}
       rel="noreferrer"
       onClick={() =>
         telemetry.log(QuickstartLinkClicked, {
