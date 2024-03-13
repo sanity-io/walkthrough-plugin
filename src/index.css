@@ -30,12 +30,12 @@
   display: inline-flex
 }
 
-.hidden {
-  display: none
-}
-
 .\!hidden {
   display: none !important
+}
+
+.hidden {
+  display: none
 }
 
 .select-none {
@@ -86,20 +86,6 @@
 
 .hover\:opacity-80:hover {
   opacity: 0.8
-}
-
-@media (min-width: 640px) {
-  .sm\:visible {
-    visibility: visible
-  }
-
-  .sm\:block {
-    display: block
-  }
-
-  .sm\:\!hidden {
-    display: none !important
-  }
 }
 
 @media (min-width: 768px) {
