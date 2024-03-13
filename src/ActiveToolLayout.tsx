@@ -51,7 +51,7 @@ export function ActiveToolLayout(props: ActiveToolLayoutProps) {
       height={'fill'}
       style={{gridTemplateColumns: '1fr auto', gridAutoFlow: 'column'}}
     >
-      <div>{props.renderDefault(props)}</div>
+      <div style={{overflowY: 'auto'}}>{props.renderDefault(props)}</div>
       <SidebarContainer />
     </Grid>
   )
