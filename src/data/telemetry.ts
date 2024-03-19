@@ -12,6 +12,12 @@ export const QuickstartStepCompleted = defineEvent<WalkthroughStepContext>({
   description: 'User completed a step in the quickstart plugin checklist',
 })
 
+export const QuickstartPluginLoaded = defineEvent<{errorOccurred: string}>({
+  name: 'Quickstart Plugin Loaded',
+  version: 1,
+  description: 'User logged into studio with Quickstart Plugin',
+})
+
 export const QuickstartCompleted = defineEvent<{projectId: string}>({
   name: 'Quickstart Completed',
   version: 1,
