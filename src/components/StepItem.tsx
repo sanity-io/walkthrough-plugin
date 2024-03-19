@@ -6,13 +6,13 @@ import {
   Icon,
   IconSymbol,
 } from '@sanity/icons'
+import {useTelemetry} from '@sanity/telemetry/react'
 import {Badge, Box, Button, Card, Flex, Text} from '@sanity/ui'
-import React, {useContext, useEffect, useMemo, useState} from 'react'
+import React, {useContext, useEffect, useMemo, useRef} from 'react'
+import {useProjectId} from 'sanity'
+import {QuickstartStepClicked} from '../data/telemetry'
 import {Step as StepProps} from '../data/types'
 import {StepContentSerializer} from './StepContentSerializer'
-import {useProjectId} from 'sanity'
-import {useTelemetry} from '@sanity/telemetry/react'
-import {QuickstartStepClicked} from '../data/telemetry'
 
 const IconCircle: React.FC<{isComplete: boolean; symbol: string}> = ({isComplete, symbol}) => {
   return (
@@ -46,46 +46,59 @@ export const useStep = () => useContext(StepContext)
 
 export const StepItem: React.FC<
   StepProps & {
-    startOpen: boolean
+    nextId?: string
+    open: boolean
     isComplete: boolean
     toggleComplete: (id: string) => void
+    toggleOpen: (id: string) => void
     disableExpansion: boolean
   }
 > = ({
   _id,
+  nextId,
   badge,
   content,
-  startOpen,
+  open,
   icon,
   title,
   isComplete,
   toggleComplete,
+  toggleOpen,
   disableExpansion = false,
 }) => {
-  const [open, setOpen] = useState(startOpen)
   const projectId = useProjectId()
+  const ref = useRef<HTMLDivElement>(null)
   const telemetry = useTelemetry()
   const stepContextValue = useMemo(
     () => ({stepId: _id, stepName: title, projectId}),
     [_id, title, projectId],
   )
 
-  const toggleOpen = () => {
+  useEffect(() => {
+    // When the step is opened, scroll it into view
+    if (open && ref?.current) {
+      const stepScrollContainer = document.getElementById('step-scroll-container')
+      if (!stepScrollContainer) return
+      const stepContainer = ref.current
+      const scrollContainerY = stepScrollContainer.getBoundingClientRect().y
+      const stepContainerTop = stepContainer.getBoundingClientRect().top
+      const y = stepContainerTop - scrollContainerY - 3 * 16
+      stepScrollContainer.scrollTo({top: y, behavior: 'smooth'})
+    }
+  }, [open])
+
+  const handleClick = () => {
     telemetry.log(QuickstartStepClicked, {
       stepCompleted: isComplete,
       ...stepContextValue,
     })
-    setOpen((x) => !x)
+    toggleOpen(_id)
   }
-
-  useEffect(() => {
-    // If parent says this one should start open, open it
-    if (startOpen) setOpen(startOpen)
-  }, [startOpen])
 
   return (
     <StepContext.Provider value={stepContextValue}>
       <Card
+        ref={ref}
         radius={4}
         paddingY={open ? 2 : 1}
         paddingX={2}
@@ -95,7 +108,7 @@ export const StepItem: React.FC<
         <Flex
           direction={'row'}
           align={'center'}
-          onClick={disableExpansion ? undefined : toggleOpen}
+          onClick={disableExpansion ? undefined : handleClick}
           className={disableExpansion ? undefined : 'hover:cursor-pointer'}
         >
           <Flex>
@@ -125,7 +138,14 @@ export const StepItem: React.FC<
         {open && (
           <>
             <StepContentSerializer content={content} />
-            <Flex justify={'flex-end'}>
+            <Flex justify={'flex-end'} gap={1}>
+              {nextId && (
+                <Button
+                  mode="bleed"
+                  text={isComplete ? 'Next' : 'Skip'}
+                  onClick={() => toggleOpen(nextId)}
+                />
+              )}
               <Button
                 padding={2}
                 fontSize={1}
@@ -135,8 +155,6 @@ export const StepItem: React.FC<
                 mode={'ghost'}
                 onClick={() => {
                   toggleComplete(_id)
-                  // Only close the current step when marking complete
-                  if (!isComplete) setOpen(false)
                 }}
               />
             </Flex>

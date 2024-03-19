@@ -1,6 +1,6 @@
 import {useTelemetry} from '@sanity/telemetry/react'
 import {Box, Flex, Heading, Text} from '@sanity/ui'
-import React, {PropsWithChildren, useCallback, useState} from 'react'
+import React, {PropsWithChildren, useCallback, useEffect, useState} from 'react'
 import {useClient, useProjectId} from 'sanity'
 import {QuickstartCompleted, QuickstartStepCompleted} from '../data/telemetry'
 import {Step} from '../data/types'
@@ -19,8 +19,15 @@ export const SidebarContent: React.FC<
   const projectId = useProjectId()
   const client = useClient({apiVersion: 'v2024-02-23'})
   const telemetry = useTelemetry()
+  const [activeStep, setActiveStep] = useState(
+    steps.map((s) => s._id).filter((id) => !completedSteps.includes(id))[1],
+  )
 
   const [completed, setCompleted] = useState(completedSteps)
+
+  useEffect(() => {
+    setActiveStep(steps.map((s) => s._id).filter((id) => !completed.includes(id))[1])
+  }, [completed])
 
   const isStepComplete = useCallback(
     (id: string) => {
@@ -28,6 +35,18 @@ export const SidebarContent: React.FC<
     },
     [completed],
   )
+
+  const toggleOpen = useCallback(
+    (id: string) => {
+      if (activeStep == id) {
+        setActiveStep('')
+      } else {
+        setActiveStep(id)
+      }
+    },
+    [activeStep],
+  )
+
   const toggleComplete = useCallback(
     (id: string) => {
       const isCompleted = isStepComplete(id)
@@ -62,7 +81,7 @@ export const SidebarContent: React.FC<
     [isStepComplete, completed, steps],
   )
   return (
-    <Box style={{overflowY: 'scroll', height: '100%'}}>
+    <Box style={{overflowY: 'scroll', height: '100%'}} id="step-scroll-container">
       {/* TITLE HEADER */}
       <Flex direction={'column'} gap={4} padding={3}>
         <Flex>
@@ -80,14 +99,17 @@ export const SidebarContent: React.FC<
       <Flex direction={'column'} gap={3} marginBottom={8} style={{position: 'relative'}}>
         {steps.map((s, index) => {
           const isComplete = index == 0 || isStepComplete(s._id)
-          const isPreviousComplete = index == 1 || isStepComplete(steps[Math.max(index - 1, 0)]._id)
+          let nextId
+          if (index + 1 <= steps.length - 1) nextId = steps[index + 1]._id
           return (
             <StepItem
               key={s._id}
               {...s}
-              startOpen={isPreviousComplete && !isComplete}
+              nextId={nextId}
+              open={activeStep == s._id}
               isComplete={isComplete}
               toggleComplete={toggleComplete}
+              toggleOpen={toggleOpen}
               disableExpansion={index == 0}
             />
           )
