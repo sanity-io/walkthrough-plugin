@@ -5,6 +5,7 @@ import {Box, Button, Card, Code, Heading, Stack, Text} from '@sanity/ui'
 import React, {ReactNode, useMemo, useState} from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import {LoadingBlock, PortableTextBlock, useClient, useProjectId} from 'sanity'
+import {useRouter} from 'sanity/router'
 import useSWR from 'swr'
 import {QuickstartCodeCopied, QuickstartLinkClicked} from '../data/telemetry'
 import {useStep} from './StepItem'
@@ -63,19 +64,24 @@ function HeadingBlock(props: {children: ReactNode}) {
 function Link(props: {children: ReactNode; url: string; withIcon: boolean; newTab: boolean}) {
   const {children, url, withIcon, newTab} = props
   const stepContext = useStep()
+  const router = useRouter()
   const telemetry = useTelemetry()
   return (
     <a
       href={url}
       target={newTab ? '_blank' : undefined}
       rel="noreferrer"
-      onClick={() =>
+      onClick={(e) => {
+        if (!newTab) {
+          e.preventDefault()
+          router.navigateUrl({path: url})
+        }
         telemetry.log(QuickstartLinkClicked, {
           ...stepContext,
           targetText: props?.children,
           targetUrl: props?.url,
         })
-      }
+      }}
     >
       {children}
       {withIcon && (
@@ -118,19 +124,24 @@ function CTAButton(props: {text: string; href: string; icon: IconSymbol; newTab:
   const sanitizedHref = props?.href.replace('{{PROJECT_ID}}', projectId)
   const stepContext = useStep()
   const telemetry = useTelemetry()
+  const router = useRouter()
   return (
     <div>
       <Button
         as={'a'}
         href={sanitizedHref}
         target={props?.newTab ? '_blank' : undefined}
-        onClick={() =>
+        onClick={(e) => {
+          if (!props?.newTab) {
+            e.preventDefault()
+            router.navigateUrl({path: sanitizedHref})
+          }
           telemetry.log(QuickstartLinkClicked, {
             ...stepContext,
             targetText: props?.text,
             targetUrl: props?.href,
           })
-        }
+        }}
         text={props?.text}
         icon={props?.icon && <Icon symbol={props.icon} />}
         mode={'default'}
