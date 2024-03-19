@@ -1,10 +1,12 @@
 import {useTelemetry} from '@sanity/telemetry/react'
 import {Box, Flex, Heading, Text} from '@sanity/ui'
-import React, {PropsWithChildren, useCallback, useEffect, useState} from 'react'
+import React, {PropsWithChildren, useCallback, useState} from 'react'
 import {useClient, useProjectId} from 'sanity'
 import {QuickstartCompleted, QuickstartStepCompleted} from '../data/telemetry'
 import {Step} from '../data/types'
 import {StepItem} from './StepItem'
+
+const ACTIVE_STEP = 'walkthrough-plugin:activeStep'
 
 export const SidebarContent: React.FC<
   PropsWithChildren<{
@@ -19,15 +21,12 @@ export const SidebarContent: React.FC<
   const projectId = useProjectId()
   const client = useClient({apiVersion: 'v2024-02-23'})
   const telemetry = useTelemetry()
-  const [activeStep, setActiveStep] = useState(
-    steps.map((s) => s._id).filter((id) => !completedSteps.includes(id))[1],
-  )
 
   const [completed, setCompleted] = useState(completedSteps)
-
-  useEffect(() => {
-    setActiveStep(steps.map((s) => s._id).filter((id) => !completed.includes(id))[1])
-  }, [completed])
+  const [activeStep, setActiveStep] = useState<string>(
+    localStorage.getItem(ACTIVE_STEP) ||
+      steps.map((s) => s._id).filter((id) => !completed.includes(id))[1],
+  )
 
   const isStepComplete = useCallback(
     (id: string) => {
@@ -39,8 +38,10 @@ export const SidebarContent: React.FC<
   const toggleOpen = useCallback(
     (id: string) => {
       if (activeStep == id) {
+        localStorage.setItem(ACTIVE_STEP, '')
         setActiveStep('')
       } else {
+        localStorage.setItem(ACTIVE_STEP, id)
         setActiveStep(id)
       }
     },
@@ -75,7 +76,7 @@ export const SidebarContent: React.FC<
         headers: {
           'Content-Type': 'application/json',
         },
-        body: {completedSteps: newCompletedSteps},
+        body: {completedSteps: newCompletedSteps.filter(Boolean)},
       })
     },
     [isStepComplete, completed, steps],

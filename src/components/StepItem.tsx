@@ -8,7 +8,7 @@ import {
 } from '@sanity/icons'
 import {useTelemetry} from '@sanity/telemetry/react'
 import {Badge, Box, Button, Card, Flex, Text} from '@sanity/ui'
-import React, {useContext, useEffect, useMemo, useRef} from 'react'
+import React, {useContext, useEffect, useMemo} from 'react'
 import {useProjectId} from 'sanity'
 import {QuickstartStepClicked} from '../data/telemetry'
 import {Step as StepProps} from '../data/types'
@@ -67,7 +67,6 @@ export const StepItem: React.FC<
   disableExpansion = false,
 }) => {
   const projectId = useProjectId()
-  const ref = useRef<HTMLDivElement>(null)
   const telemetry = useTelemetry()
   const stepContextValue = useMemo(
     () => ({stepId: _id, stepName: title, projectId}),
@@ -75,15 +74,11 @@ export const StepItem: React.FC<
   )
 
   useEffect(() => {
-    // When the step is opened, scroll it into view
-    if (open && ref?.current) {
+    // When the step is opened, scroll back to top of list
+    if (open) {
       const stepScrollContainer = document.getElementById('step-scroll-container')
       if (!stepScrollContainer) return
-      const stepContainer = ref.current
-      const scrollContainerY = stepScrollContainer.getBoundingClientRect().y
-      const stepContainerTop = stepContainer.getBoundingClientRect().top
-      const y = stepContainerTop - scrollContainerY - 3 * 16
-      stepScrollContainer.scrollTo({top: y, behavior: 'smooth'})
+      stepScrollContainer.scrollTo({top: 0, behavior: 'instant'})
     }
   }, [open])
 
@@ -98,7 +93,6 @@ export const StepItem: React.FC<
   return (
     <StepContext.Provider value={stepContextValue}>
       <Card
-        ref={ref}
         radius={4}
         paddingY={open ? 2 : 1}
         paddingX={2}
@@ -155,6 +149,7 @@ export const StepItem: React.FC<
                 mode={'ghost'}
                 onClick={() => {
                   toggleComplete(_id)
+                  toggleOpen(nextId || '')
                 }}
               />
             </Flex>
