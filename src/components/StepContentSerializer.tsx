@@ -1,7 +1,7 @@
 import {PortableText} from '@portabletext/react'
 import {CheckmarkIcon, ClipboardIcon, Icon, IconSymbol, LinkIcon} from '@sanity/icons'
 import {useTelemetry} from '@sanity/telemetry/react'
-import {Box, Button, Card, Code, Heading, Stack, Text} from '@sanity/ui'
+import {Box, Button, Card, Code, Heading, Stack, Text, useTheme} from '@sanity/ui'
 import React, {ReactNode, useMemo, useState} from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import {LoadingBlock, PortableTextBlock, useClient, useProjectId} from 'sanity'
@@ -9,6 +9,8 @@ import {useRouter} from 'sanity/router'
 import useSWR from 'swr'
 import {QuickstartCodeCopied, QuickstartLinkClicked} from '../data/telemetry'
 import {useStep} from './StepItem'
+import SyntaxHighlighter from 'react-syntax-highlighter'
+import {a11yDark, a11yLight} from 'react-syntax-highlighter/dist/esm/styles/hljs'
 
 function NormalBlock(props: {children: ReactNode}) {
   const {children} = props
@@ -176,6 +178,8 @@ function CodeBlock(props: {loading?: boolean; code: string; language: string; fi
   const projectId = useProjectId()
   const [isCopied, setCopied] = useState(false)
   const client = useClient({apiVersion: 'v2024-02-23'})
+  const theme = useTheme()
+  const isDark = theme?.sanity?.color?.dark
   const {data, isLoading} = useSWR(
     `/projects/${projectId}/groqDefault`,
     () =>
@@ -235,20 +239,27 @@ function CodeBlock(props: {loading?: boolean; code: string; language: string; fi
             mode="bleed"
           />
           {filename && (
-            <Box paddingBottom={5}>
+            <Box>
               <Code size={0}>{filename}</Code>
             </Box>
           )}
-          <Code size={1}>
-            {loading ? (
-              <LoadingBlock />
-            ) : (
-              <>
-                <span>{language == 'sh' && `$ `}</span>
-                {sanitizedCodeSnippet}
-              </>
-            )}
-          </Code>
+
+          {loading ? (
+            <LoadingBlock />
+          ) : (
+            <SyntaxHighlighter
+              language={language}
+              style={isDark ? a11yDark : a11yLight}
+              customStyle={{
+                overflowX: 'initial',
+                background: 'none',
+                marginBottom: '0',
+                padding: '0',
+              }}
+            >
+              {`${language == 'sh' ? `$ ` : ''}${sanitizedCodeSnippet}`}
+            </SyntaxHighlighter>
+          )}
         </Box>
       </Card>
     </CopyToClipboard>
