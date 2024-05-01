@@ -37,7 +37,7 @@ export function SidebarContainer() {
       paddingBottom={0}
       borderLeft
       style={{
-        width: '380px',
+        width: '400px',
         overflowY: 'hidden',
         position: 'relative',
       }}
