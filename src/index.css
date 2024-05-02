@@ -1,95 +1,119 @@
 .absolute {
-  position: absolute
+  position: absolute;
 }
 
 .relative {
-  position: relative
+  position: relative;
 }
 
 .z-10 {
-  z-index: 10
+  z-index: 10;
 }
 
 .box-border {
-  box-sizing: border-box
+  box-sizing: border-box;
 }
 
 .block {
-  display: block
+  display: block;
 }
 
 .inline {
-  display: inline
+  display: inline;
 }
 
 .flex {
-  display: flex
+  display: flex;
 }
 
 .inline-flex {
-  display: inline-flex
+  display: inline-flex;
 }
 
 .\!hidden {
-  display: none !important
+  display: none !important;
 }
 
 .hidden {
-  display: none
+  display: none;
 }
 
 .select-none {
   -webkit-user-select: none;
      -moz-user-select: none;
-          user-select: none
+          user-select: none;
 }
 
 .border {
-  border-width: 1px
+  border-width: 1px;
 }
 
 .border-solid {
-  border-style: solid
+  border-style: solid;
 }
 
 .border-transparent {
-  border-color: transparent
+  border-color: transparent;
 }
 
 .overline {
-  text-decoration-line: overline
+  text-decoration-line: overline;
 }
 
 .filter {
-  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .transition-all {
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms
+  transition-duration: 150ms;
 }
 
 .transition-opacity {
   transition-property: opacity;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms
+  transition-duration: 150ms;
+}
+
+/* Chrome, Safari and Opera */
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.fade-out-right::after {
+  display: block;
+  content: '';
+  background: linear-gradient(-90deg, var(--card-code-bg-color, #f6f6f8), transparent);
+  position: absolute;
+  right: 33px;
+  top: 0;
+  height: 100%;
+  width: 60px;
 }
 
 .hover\:cursor-pointer:hover {
-  cursor: pointer
+  cursor: pointer;
 }
 
 .hover\:border-\[var\(--card-border-color\)\]:hover {
-  border-color: var(--card-border-color)
+  border-color: var(--card-border-color);
 }
 
 .hover\:opacity-80:hover {
-  opacity: 0.8
+  opacity: 0.8;
 }
 
 @media (min-width: 768px) {
   .md\:\!block {
-    display: block !important
+    display: block !important;
   }
 }

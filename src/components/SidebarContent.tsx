@@ -1,11 +1,11 @@
 import {useTelemetry} from '@sanity/telemetry/react'
-import {Box, Button, Code, Flex, Heading, Stack, Text} from '@sanity/ui'
+import {Box, Button, Card, Code, Flex, Heading, Stack, Text, useToast} from '@sanity/ui'
 import React, {PropsWithChildren, useCallback, useState} from 'react'
 import {useClient, useProjectId} from 'sanity'
 import {QuickstartCodeCopied, QuickstartCompleted, QuickstartStepCompleted} from '../data/telemetry'
 import {Step} from '../data/types'
 import {StepItem} from './StepItem'
-import {CheckmarkIcon, ClipboardIcon, Icon} from '@sanity/icons'
+import {CheckmarkIcon, ClipboardIcon} from '@sanity/icons'
 import CopyToClipboard from 'react-copy-to-clipboard'
 
 const ACTIVE_STEP = 'walkthrough-plugin:activeStep'
@@ -144,23 +144,19 @@ export const SidebarContent: React.FC<
           borderTop: '0.5px solid var(--card-border-color)',
         }}
       >
-        <Flex align={'baseline'} gap={2}>
+        <Stack space={4}>
           <Text size={1} muted>
-            <Icon symbol={'code-block'} />
+            {footer}
           </Text>
-          <Stack space={4}>
-            <Text size={1} muted>
-              {footer}
-            </Text>
-            <CopyableCodeBlock />
-          </Stack>
-        </Flex>
+          <CopyableCodeBlock />
+        </Stack>
       </Box>
     </Box>
   )
 }
 
 function CopyableCodeBlock() {
+  const toast = useToast()
   const projectId = useProjectId()
   const [isCopied, setCopied] = useState(false)
   const telemetry = useTelemetry()
@@ -171,6 +167,12 @@ function CopyableCodeBlock() {
   const onCopy = (text: string) => {
     setCopied(true)
     setTimeout(() => setCopied(false), 5000)
+    toast.push({
+      status: 'info',
+      title: 'Command copied',
+      description:
+        'Open your terminal. Paste and run the command, and follow the instructions from there. ',
+    })
     telemetry.log(QuickstartCodeCopied, {
       projectId,
       stepId: 'footer',
@@ -180,27 +182,39 @@ function CopyableCodeBlock() {
   }
   return (
     <CopyToClipboard text={sanitizedCodeSnippet} onCopy={onCopy}>
-      <Flex
+      <Card
+        radius={2}
         style={{
-          position: 'relative',
           boxSizing: 'border-box',
           cursor: 'pointer',
+          backgroundColor: 'var(--card-code-bg-color, #f6f6f8)',
         }}
-        align={'baseline'}
+        className="hover:opacity-80 transition-opacity"
       >
-        <Box style={{overflowX: 'auto'}} paddingY={2}>
-          <Code size={1}>{sanitizedCodeSnippet}</Code>
-        </Box>
-        <Button
+        <Flex
           style={{
-            backgroundColor: 'var(--card-code-bg-color, #f6f6f8)',
+            position: 'relative',
           }}
-          icon={isCopied ? CheckmarkIcon : ClipboardIcon}
-          tone={isCopied ? 'positive' : 'default'}
-          size={0}
-          mode="bleed"
-        />
-      </Flex>
+          align={'baseline'}
+        >
+          <Box
+            style={{overflowX: 'auto', display: 'inline-flex'}}
+            paddingY={2}
+            paddingLeft={2}
+            paddingRight={5}
+            className="no-scrollbar fade-out-right"
+          >
+            <Code size={1}>{sanitizedCodeSnippet}</Code>
+          </Box>
+          <Button
+            style={{backgroundColor: 'var(--card-code-bg-color, #f6f6f8)'}}
+            icon={isCopied ? CheckmarkIcon : ClipboardIcon}
+            tone={isCopied ? 'positive' : 'default'}
+            size={0}
+            mode="bleed"
+          />
+        </Flex>
+      </Card>
     </CopyToClipboard>
   )
 }

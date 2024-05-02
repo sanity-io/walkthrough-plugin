@@ -1,2 +1,25 @@
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .fade-out-right::after {
+    display: block;
+    content: '';
+    background: linear-gradient(-90deg, var(--card-code-bg-color, #f6f6f8), transparent);
+    position: absolute;
+    right: 33px;
+    top: 0;
+    height: 100%;
+    width: 60px;
+  }
+}
+
 @tailwind components;
 @tailwind utilities;
