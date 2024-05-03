@@ -11,7 +11,7 @@ export function useEjected(toggleComplete: () => void) {
   const client = useClient()
   const isStaging = client.getUrl('').includes('work')
 
-  const {stepName, isComplete, projectId, stepId} = useStep()
+  const {stepName, isComplete, projectId, stepId, slug} = useStep()
   const telemetry = useTelemetry()
 
   const {data, isLoading} = useSWR(
@@ -38,8 +38,8 @@ export function useEjected(toggleComplete: () => void) {
   }, [telemetry, isComplete, stepId, stepName, projectId, toggleComplete])
 
   useEffect(() => {
-    if (stepName === 'Continue development locally with CLI' && !isLoading && isEjected) {
+    if (slug === 'eject-with-cli' && !isLoading && isEjected) {
       markComplete()
     }
-  }, [stepName, isLoading, isEjected, markComplete])
+  }, [slug, isLoading, isEjected, markComplete])
 }

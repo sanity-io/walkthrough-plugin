@@ -42,6 +42,7 @@ const StepContext = React.createContext<{
   stepName?: string
   projectId?: string
   isComplete?: boolean
+  slug?: string
 }>({})
 
 export const useStep = () => useContext(StepContext)
@@ -63,6 +64,7 @@ export const StepItem: React.FC<
   open,
   icon,
   title,
+  slug,
   isComplete,
   toggleComplete,
   toggleOpen,
@@ -71,8 +73,8 @@ export const StepItem: React.FC<
   const projectId = useProjectId()
   const telemetry = useTelemetry()
   const stepContextValue = useMemo(
-    () => ({stepId: _id, stepName: title, projectId, isComplete}),
-    [_id, title, projectId, isComplete],
+    () => ({stepId: _id, stepName: title, projectId, isComplete, slug}),
+    [_id, title, projectId, isComplete, slug],
   )
 
   useEffect(() => {

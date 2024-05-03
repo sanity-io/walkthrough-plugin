@@ -8,7 +8,7 @@ import {QuickstartStepCompleted} from '../data/telemetry'
 
 export function usePublishedDocument(toggleComplete: () => void) {
   const client = useClient()
-  const {stepName, isComplete, projectId, stepId} = useStep()
+  const {stepName, isComplete, projectId, stepId, slug} = useStep()
   const {data: projectDocuments, isLoading} = useSWR('project-documents', () =>
     client.fetch('*[!(_type match "system.**") && !(_id match "drafts.")]{}'),
   )
@@ -28,7 +28,7 @@ export function usePublishedDocument(toggleComplete: () => void) {
 
   useEffect(() => {
     let subscription: Subscription | undefined
-    if (stepName === 'Publish a document' && !isLoading) {
+    if (slug === 'publish-a-document' && !isLoading) {
       if (projectDocuments?.length) {
         markComplete()
       } else {
@@ -45,5 +45,5 @@ export function usePublishedDocument(toggleComplete: () => void) {
     return () => {
       if (subscription) subscription.unsubscribe()
     }
-  }, [client, stepName, markComplete, isLoading, projectDocuments])
+  }, [client, slug, markComplete, isLoading, projectDocuments])
 }

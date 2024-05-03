@@ -11,7 +11,7 @@ export function useInvitedMembers(toggleComplete: () => void) {
   const client = useClient()
   const isStaging = client.getUrl('').includes('work')
 
-  const {stepName, isComplete, projectId, stepId} = useStep()
+  const {stepName, isComplete, projectId, stepId, slug} = useStep()
   const telemetry = useTelemetry()
 
   const {data: invitedMembers, isLoading} = useSWR(
@@ -36,8 +36,8 @@ export function useInvitedMembers(toggleComplete: () => void) {
   }, [telemetry, isComplete, stepId, stepName, projectId, toggleComplete])
 
   useEffect(() => {
-    if (stepName === 'Invite a team member' && !isLoading && invitedMembers?.length) {
+    if (slug === 'invite' && !isLoading && invitedMembers?.length) {
       markComplete()
     }
-  }, [stepName, isLoading, invitedMembers, markComplete])
+  }, [slug, isLoading, invitedMembers, markComplete])
 }
