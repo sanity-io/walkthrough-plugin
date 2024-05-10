@@ -3,6 +3,7 @@ import {PortableTextBlock} from 'sanity'
 export type Step = {
   _id: string
   title: string
+  slug: string
   icon: string
   badge: string
   content: PortableTextBlock

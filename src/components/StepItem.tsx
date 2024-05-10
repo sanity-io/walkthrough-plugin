@@ -13,6 +13,7 @@ import {useProjectId} from 'sanity'
 import {QuickstartStepClicked} from '../data/telemetry'
 import {Step as StepProps} from '../data/types'
 import {StepContentSerializer} from './StepContentSerializer'
+import {StepAutoCompletion} from './StepAutoCompletion'
 
 const IconCircle: React.FC<{isComplete: boolean; symbol: string}> = ({isComplete, symbol}) => {
   return (
@@ -40,6 +41,8 @@ const StepContext = React.createContext<{
   stepId?: string
   stepName?: string
   projectId?: string
+  isComplete?: boolean
+  slug?: string
 }>({})
 
 export const useStep = () => useContext(StepContext)
@@ -61,6 +64,7 @@ export const StepItem: React.FC<
   open,
   icon,
   title,
+  slug,
   isComplete,
   toggleComplete,
   toggleOpen,
@@ -69,8 +73,8 @@ export const StepItem: React.FC<
   const projectId = useProjectId()
   const telemetry = useTelemetry()
   const stepContextValue = useMemo(
-    () => ({stepId: _id, stepName: title, projectId}),
-    [_id, title, projectId],
+    () => ({stepId: _id, stepName: title, projectId, isComplete, slug}),
+    [_id, title, projectId, isComplete, slug],
   )
 
   useEffect(() => {
@@ -92,6 +96,7 @@ export const StepItem: React.FC<
 
   return (
     <StepContext.Provider value={stepContextValue}>
+      <StepAutoCompletion onStepCompletion={() => toggleComplete(_id)} />
       <Card
         radius={4}
         paddingY={open ? 2 : 1}
