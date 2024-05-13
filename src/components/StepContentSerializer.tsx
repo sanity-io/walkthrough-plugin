@@ -193,7 +193,7 @@ function CodeBlock(props: {loading?: boolean; code: string; language: string; fi
   const telemetry = useTelemetry()
 
   const sanitizedCodeSnippet = useMemo(() => {
-    let sanitizedExample = code.replaceAll('{{PROJECT_ID}}', `"${projectId}"`)
+    let sanitizedExample = code.replaceAll('{{PROJECT_ID}}', `${projectId}`)
     if (!(isLoading || loading) && data) {
       sanitizedExample = sanitizedExample.replaceAll('{{GROQ_QUERY}}', Object.values(data)?.[0])
     }
