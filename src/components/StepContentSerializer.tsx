@@ -79,8 +79,10 @@ function Link(props: {children: ReactNode; url: string; withIcon: boolean; newTa
           router.navigateUrl({path: url})
         }
         telemetry.log(QuickstartLinkClicked, {
-          ...stepContext,
-          targetText: props?.children,
+          projectId: stepContext.projectId,
+          stepId: stepContext.stepId,
+          stepName: stepContext.stepName,
+          targetText: props?.children as string,
           targetUrl: props?.url,
         })
       }}
@@ -139,7 +141,9 @@ function CTAButton(props: {text: string; href: string; icon: IconSymbol; newTab:
             router.navigateUrl({path: sanitizedHref})
           }
           telemetry.log(QuickstartLinkClicked, {
-            ...stepContext,
+            projectId,
+            stepId: stepContext.stepId,
+            stepName: stepContext.stepName,
             targetText: props?.text,
             targetUrl: props?.href,
           })
@@ -205,7 +209,9 @@ function CodeBlock(props: {loading?: boolean; code: string; language: string; fi
     setCopied(true)
     setTimeout(() => setCopied(false), 5000)
     telemetry.log(QuickstartCodeCopied, {
-      ...stepContext,
+      projectId,
+      stepId: stepContext.stepId,
+      stepName: stepContext.stepName,
       copiedContent: text,
     })
   }
