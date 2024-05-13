@@ -1,10 +1,12 @@
 import {useTelemetry} from '@sanity/telemetry/react'
 import {Box, Flex, Heading, Text} from '@sanity/ui'
-import React, {PropsWithChildren, useCallback, useState} from 'react'
+import React, {PropsWithChildren, useCallback, useEffect, useState} from 'react'
 import {useClient, useProjectId} from 'sanity'
 import {QuickstartCompleted, QuickstartStepCompleted} from '../data/telemetry'
 import {Step} from '../data/types'
 import {StepItem} from './StepItem'
+import {useRouter} from 'sanity/router'
+import {ArrowTopRightIcon} from '@sanity/icons'
 
 const ACTIVE_STEP = 'walkthrough-plugin:activeStep'
 
@@ -21,12 +23,27 @@ export const SidebarContent: React.FC<
   const projectId = useProjectId()
   const client = useClient({apiVersion: 'v2024-02-23'})
   const telemetry = useTelemetry()
+  // Use query param to link to a specific step
+  const router = useRouter()
+  const path = router.resolvePathFromState(router.state)
+  const params = new URL(`${location.origin}${path}`).searchParams
+  const activeStepSlugParam = params.get('active-step')
 
   const [completed, setCompleted] = useState(completedSteps)
   const [activeStep, setActiveStep] = useState<string>(
     localStorage.getItem(ACTIVE_STEP) ||
       steps.map((s) => s._id).filter((id) => !completed.includes(id))[1],
   )
+
+  useEffect(() => {
+    if (activeStepSlugParam) {
+      const activeStepId = steps.find((s) => s.slug === activeStepSlugParam)?._id
+      if (activeStepId) {
+        setActiveStep(activeStepId)
+        localStorage.setItem(ACTIVE_STEP, activeStepId)
+      }
+    }
+  }, [activeStepSlugParam, steps])
 
   const isStepComplete = useCallback(
     (id: string) => {
@@ -44,8 +61,10 @@ export const SidebarContent: React.FC<
         localStorage.setItem(ACTIVE_STEP, id)
         setActiveStep(id)
       }
+      // Remove the search param for active step if we navigate away from it
+      if (activeStepSlugParam) router.navigateUrl({path: location.origin + location.pathname})
     },
-    [activeStep],
+    [activeStep, activeStepSlugParam, router],
   )
 
   const toggleComplete = useCallback(
@@ -132,6 +151,7 @@ export const SidebarContent: React.FC<
         paddingX={3}
         paddingY={4}
         style={{
+          cursor: 'pointer',
           position: 'absolute',
           bottom: '0',
           left: '0',
@@ -141,9 +161,16 @@ export const SidebarContent: React.FC<
           zIndex: '20',
           borderTop: '0.5px solid var(--card-border-color)',
         }}
+        onClick={() => {
+          const activeStepURL = `${location.origin}${location.pathname}?active-step=eject-with-cli`
+          router.navigateUrl({path: activeStepURL})
+        }}
       >
-        <Text size={1} muted>
+        <Text size={1} muted className="hover:opacity-80 transition-opacity">
           {footer}
+          <span style={{paddingLeft: '0.75em'}}>
+            <ArrowTopRightIcon />
+          </span>
         </Text>
       </Box>
     </Box>
