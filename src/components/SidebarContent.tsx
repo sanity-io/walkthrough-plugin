@@ -116,7 +116,7 @@ export const SidebarContent: React.FC<
         </Flex>
       </Flex>
       {/* STEPS LIST */}
-      <Flex direction={'column'} gap={3} marginBottom={8} style={{position: 'relative'}}>
+      <Flex direction={'column'} gap={3} paddingBottom={3} style={{position: 'relative'}}>
         {steps.map((s, index) => {
           const isComplete = index == 0 || isStepComplete(s._id)
           let nextId
@@ -130,49 +130,11 @@ export const SidebarContent: React.FC<
               isComplete={isComplete}
               toggleComplete={toggleComplete}
               toggleOpen={toggleOpen}
-              disableExpansion={index == 0}
+              disableExpansion={false}
             />
           )
         })}
-        <div
-          style={{
-            position: 'absolute',
-            width: '0',
-            left: '1.25rem',
-            top: '1rem',
-            bottom: '1rem',
-            border: '0.5px solid var(--card-border-color, #e3e4e8)',
-            zIndex: '0',
-          }}
-        />
       </Flex>
-      {/* PERSISTENT REMOVAL CALLOUT */}
-      <Box
-        paddingX={3}
-        paddingY={4}
-        style={{
-          cursor: 'pointer',
-          position: 'absolute',
-          bottom: '0',
-          left: '0',
-          right: '0',
-          backgroundColor: 'var(--card-bg-color)',
-          boxSizing: 'border-box',
-          zIndex: '20',
-          borderTop: '0.5px solid var(--card-border-color)',
-        }}
-        onClick={() => {
-          const activeStepURL = `${location.origin}${location.pathname}?active-step=eject-with-cli`
-          router.navigateUrl({path: activeStepURL})
-        }}
-      >
-        <Text size={1} muted className="hover:opacity-80 transition-opacity">
-          {footer}
-          <span style={{paddingLeft: '0.75em'}}>
-            <ArrowTopRightIcon />
-          </span>
-        </Text>
-      </Box>
     </Box>
   )
 }

@@ -7,7 +7,7 @@ import {
   IconSymbol,
 } from '@sanity/icons'
 import {useTelemetry} from '@sanity/telemetry/react'
-import {Badge, Box, Button, Card, Flex, Text} from '@sanity/ui'
+import {Badge, Box, Button, Card, Flex, Stack, Text} from '@sanity/ui'
 import React, {useContext, useEffect, useMemo} from 'react'
 import {useProjectId} from 'sanity'
 import {QuickstartStepClicked} from '../data/telemetry'
@@ -64,6 +64,7 @@ export const StepItem: React.FC<
   open,
   icon,
   title,
+  subtitle,
   slug,
   isComplete,
   toggleComplete,
@@ -106,19 +107,30 @@ export const StepItem: React.FC<
       >
         <Flex
           direction={'row'}
-          align={'center'}
+          align={'flex-start'}
           onClick={disableExpansion ? undefined : handleClick}
           className={disableExpansion ? undefined : 'hover:cursor-pointer'}
         >
           <Flex>
             <IconCircle symbol={icon} isComplete={isComplete} />
           </Flex>
-          <Flex flex={1} paddingLeft={2} className="select-none">
-            <Text size={1} weight="medium">
-              {title}
-            </Text>
+          <Flex flex={1} paddingLeft={2} paddingTop={2} className="select-none">
+            <Stack space={3} paddingBottom={1}>
+              <Text size={1} weight="medium">
+                {title}
+              </Text>
+              {subtitle && (
+                <Text size={1} muted>
+                  {subtitle}
+                </Text>
+              )}
+            </Stack>
           </Flex>
-          {badge && <Badge tone={badge === 'No code' ? 'primary' : undefined}>{badge}</Badge>}
+          {badge && (
+            <Badge tone={badge === 'No code' ? 'primary' : undefined} paddingTop={2}>
+              {badge}
+            </Badge>
+          )}
           <Flex paddingLeft={1}>
             <Button
               size={0}
