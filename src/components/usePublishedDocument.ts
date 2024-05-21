@@ -7,7 +7,7 @@ import {useTelemetry} from '@sanity/telemetry/react'
 import {QuickstartStepCompleted} from '../data/telemetry'
 
 export function usePublishedDocument(toggleComplete: () => void) {
-  const client = useClient()
+  const client = useClient({apiVersion: 'v2024-02-23'})
   const {stepName, isComplete, projectId, stepId, slug} = useStep()
   const {data: projectDocuments, isLoading} = useSWR('project-documents', () =>
     client.fetch('*[!(_type match "system.**") && !(_id match "drafts.")]{}'),
