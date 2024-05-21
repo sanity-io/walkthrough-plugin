@@ -6,7 +6,6 @@ import {QuickstartCompleted, QuickstartStepCompleted} from '../data/telemetry'
 import {Step} from '../data/types'
 import {StepItem} from './StepItem'
 import {useRouter} from 'sanity/router'
-import {ArrowTopRightIcon} from '@sanity/icons'
 
 const ACTIVE_STEP = 'walkthrough-plugin:activeStep'
 

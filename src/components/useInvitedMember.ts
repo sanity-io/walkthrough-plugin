@@ -8,7 +8,7 @@ import {QuickstartStepCompleted} from '../data/telemetry'
 export function useInvitedMembers(toggleComplete: () => void) {
   //   Use the sanity client to determine whether we're on a staging
   //  or production project
-  const client = useClient()
+  const client = useClient({apiVersion: 'v2024-02-23'})
   const isStaging = client.getUrl('').includes('work')
 
   const {stepName, isComplete, projectId, stepId, slug} = useStep()

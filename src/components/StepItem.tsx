@@ -15,7 +15,11 @@ import {Step as StepProps} from '../data/types'
 import {StepContentSerializer} from './StepContentSerializer'
 import {StepAutoCompletion} from './StepAutoCompletion'
 
-const IconCircle: React.FC<{isComplete: boolean; symbol: string}> = ({isComplete, symbol}) => {
+const IconCircle: React.FC<{isComplete: boolean; symbol: string; blue: boolean}> = ({
+  isComplete,
+  symbol,
+  blue,
+}) => {
   return (
     <Box
       style={{
@@ -29,7 +33,8 @@ const IconCircle: React.FC<{isComplete: boolean; symbol: string}> = ({isComplete
         backgroundColor: isComplete
           ? 'var(--card-focus-ring-color,#556bfc)'
           : 'var(--card-code-bg-color, #F6F6F8)',
-        color: isComplete ? 'white' : undefined,
+        // eslint-disable-next-line no-nested-ternary
+        color: isComplete ? 'white' : blue ? 'var(--card-focus-ring-color,#556bfc)' : undefined,
       }}
     >
       {isComplete ? <CheckmarkIcon /> : <Icon symbol={symbol as IconSymbol} />}
@@ -112,7 +117,7 @@ export const StepItem: React.FC<
           className={disableExpansion ? undefined : 'hover:cursor-pointer'}
         >
           <Flex>
-            <IconCircle symbol={icon} isComplete={isComplete} />
+            <IconCircle symbol={icon} isComplete={false} blue={slug === 'eject-with-cli'} />
           </Flex>
           <Flex flex={1} paddingLeft={2} paddingTop={2} className="select-none">
             <Stack space={3} paddingBottom={1}>
