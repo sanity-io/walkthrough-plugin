@@ -31,7 +31,7 @@ export const SidebarContent: React.FC<
   const [completed, setCompleted] = useState(completedSteps)
   const [activeStep, setActiveStep] = useState<string>(
     localStorage.getItem(ACTIVE_STEP) ||
-      steps.map((s) => s._id).filter((id) => !completed.includes(id))[1],
+      steps.map((s) => s._id).filter((id) => !completed.includes(id))[0],
   )
 
   useEffect(() => {
