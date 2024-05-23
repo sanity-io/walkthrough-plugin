@@ -117,7 +117,7 @@ export const SidebarContent: React.FC<
       {/* STEPS LIST */}
       <Flex direction={'column'} gap={3} paddingBottom={3} style={{position: 'relative'}}>
         {steps.map((s, index) => {
-          const isComplete = index == 0 || isStepComplete(s._id)
+          const isComplete = isStepComplete(s._id)
           let nextId
           if (index + 1 <= steps.length - 1) nextId = steps[index + 1]._id
           return (

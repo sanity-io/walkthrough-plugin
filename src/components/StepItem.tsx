@@ -117,7 +117,7 @@ export const StepItem: React.FC<
           className={disableExpansion ? undefined : 'hover:cursor-pointer'}
         >
           <Flex>
-            <IconCircle symbol={icon} isComplete={false} blue={slug === 'eject-with-cli'} />
+            <IconCircle symbol={icon} isComplete={isComplete} blue={slug === 'eject-with-cli'} />
           </Flex>
           <Flex flex={1} paddingLeft={2} paddingTop={2} className="select-none">
             <Stack space={3} paddingBottom={1}>
