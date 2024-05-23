@@ -102,7 +102,12 @@ export const StepItem: React.FC<
 
   return (
     <StepContext.Provider value={stepContextValue}>
-      <StepAutoCompletion onStepCompletion={() => toggleComplete(_id)} />
+      <StepAutoCompletion
+        onStepCompletion={() => {
+          toggleComplete(_id)
+          if (open) toggleOpen(nextId || '')
+        }}
+      />
       <Card
         radius={4}
         paddingY={open ? 2 : 1}
