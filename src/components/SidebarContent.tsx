@@ -69,11 +69,13 @@ export const SidebarContent: React.FC<
   const toggleComplete = useCallback(
     (id: string) => {
       const isCompleted = isStepComplete(id)
-      let newCompletedSteps = [...completed]
+      let newCompletedSteps = [...new Set(completed)] // Deduplicate previous compelted steps
 
       if (isCompleted) {
+        // Remove the id from the completed steps array
         newCompletedSteps = newCompletedSteps.filter((s) => s !== id)
       } else {
+        // Add to the completed steps array
         newCompletedSteps.push(id)
         telemetry.log(QuickstartStepCompleted, {
           projectId,
@@ -81,8 +83,7 @@ export const SidebarContent: React.FC<
           stepName: steps.find((s) => s._id == id)?.title,
         })
 
-        // +1 because first step is always complete
-        if (newCompletedSteps.length++ === steps.length)
+        if (newCompletedSteps.length === steps.length)
           telemetry.log(QuickstartCompleted, {projectId})
       }
       setCompleted(newCompletedSteps)
