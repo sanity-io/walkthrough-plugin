@@ -10,7 +10,7 @@ export function usePublishedDocument(toggleComplete: () => void) {
   const client = useClient({apiVersion: 'v2024-02-23'})
   const {stepName, isComplete, projectId, stepId, slug} = useStep()
   const {data: projectDocuments, isLoading} = useSWR('project-documents', () =>
-    client.fetch('*[!(_type match "system.**") && !(_id match "drafts.")]{}'),
+    client.fetch('*[!(_type match "system.**") && !(_id match "drafts.**")]{}'),
   )
   const telemetry = useTelemetry()
 
